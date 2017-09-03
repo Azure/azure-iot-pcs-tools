@@ -2,7 +2,7 @@
 
 set -x
 
-DEST="${$HOME}/docker"
+DEST="${HOME}/docker"
 
 mkdir -p ${DEST}
 cd ${DEST}
