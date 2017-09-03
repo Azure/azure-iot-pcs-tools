@@ -5,6 +5,7 @@ services:
     image: azureiotpcs/remote-monitoring-nginx:latest
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - webui
       - auth
@@ -15,9 +16,6 @@ services:
 
   webui:
     image: azureiotpcs/pcs-remote-monitoring-webui:latest
-    ports:
-      - "9000:80"
-      - "9443:443"
     depends_on:
       - auth
       - iothubmanager
@@ -27,15 +25,11 @@ services:
 
   auth:
     image: azureiotpcs/pcs-auth-dotnet
-    ports:
-      - "9001:9001"
     environment:
       - PCS_AUTH_AAD_GLOBAL_TENANTID=ToDo
 
   iothubmanager:
     image: azureiotpcs/iothub-manager-dotnet
-    ports:
-      - "9002:9002"
     environment:
       - PCS_IOTHUB_CONNSTRING
 
@@ -43,8 +37,6 @@ services:
     image: azureiotpcs/device-simulation-dotnet:latest
     depends_on:
       - storageadapter
-    ports:
-      - "9003:9003"
     environment:
       - PCS_IOTHUB_CONNSTRING
       - PCS_STORAGEADAPTER_WEBSERVICE_URL=http://storageadapter:9022/v1
@@ -56,8 +48,6 @@ services:
     image: azureiotpcs/device-telemetry-java:latest
     depends_on:
       - storageadapter
-    ports:
-      - "9004:9004"
     environment:
       - PCS_DEVICETELEMETRY_DOCUMENTDB_CONNSTRING
       - PCS_STORAGEADAPTER_WEBSERVICE_URL=http://storageadapter:9022/v1
@@ -66,16 +56,12 @@ services:
     image: azureiotpcs/pcs-ui-config-dotnet:latest
     depends_on:
       - storageadapter
-    ports:
-      - "9005:9005"
     environment:
       - PCS_UICONFIG_WEBSERVICE_PORT=9005
       - PCS_STORAGEADAPTER_WEBSERVICE_URL=http://storageadapter:9022/v1
 
   storageadapter:
     image: azureiotpcs/pcs-storage-adapter-dotnet:latest
-    ports:
-      - "9022:9022"
     environment:
       - PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING
 
@@ -86,8 +72,6 @@ services:
       - telemetry
       - iothubmanager
       - uiconfig
-    ports:
-      - "9023:9023"
     environment:
       - PCS_STREAMANALYTICS_DOCUMENTDB_CONNSTRING
       - PCS_DEVICETELEMETRY_WEBSERVICE_URL=http://telemetry:9004/v1
