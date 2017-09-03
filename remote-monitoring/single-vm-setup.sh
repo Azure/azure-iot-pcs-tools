@@ -49,4 +49,4 @@ echo "cd ${DEST}"        >> ${DEST}/run.sh
 echo "docker-compose up" >> ${DEST}/run.sh
 chmod 750 ${DEST}/run.sh
 
-${DEST}/run.sh
+nohup ${DEST}/run.sh &
