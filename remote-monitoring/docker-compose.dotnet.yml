@@ -57,7 +57,6 @@ services:
     depends_on:
       - storageadapter
     environment:
-      - PCS_UICONFIG_WEBSERVICE_PORT=9005
       - PCS_STORAGEADAPTER_WEBSERVICE_URL=http://storageadapter:9022/v1
 
   storageadapter:
