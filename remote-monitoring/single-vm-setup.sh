@@ -5,6 +5,8 @@ set -x
 DEST="/app"
 START="${DEST}/start.sh"
 STOP="${DEST}/stop.sh"
+UPDATE="${DEST}/update.sh"
+LOGS="${DEST}/logs.sh"
 
 export HOST_NAME="${1:-localhost}"
 export APP_RUNTIME="${3:-dotnet}"
@@ -30,6 +32,8 @@ mkdir -p ${DEST}
 cd ${DEST}
 touch ${START} && chmod 750 ${START}
 touch ${STOP} && chmod 750 ${STOP}
+touch ${UPDATE} && chmod 750 ${UPDATE}
+touch ${LOGS} && chmod 750 ${LOGS}
 wget $COMPOSEFILE -O ${DEST}/docker-compose.yml
 
 # ========================================================================
@@ -51,7 +55,14 @@ echo "export PCS_IOTHUBREACT_AZUREBLOB_ACCOUNT=\"${PCS_IOTHUBREACT_AZUREBLOB_ACC
 echo "export PCS_IOTHUBREACT_AZUREBLOB_KEY=\"${PCS_IOTHUBREACT_AZUREBLOB_KEY}\""                         >> ${START}
 echo                             >> ${START}
 echo "cd ${DEST}"                >> ${START}
-echo "nohup docker-compose up &" >> ${START}
+echo                             >> ${START}
+echo 'list=$(docker ps -aq)'     >> ${START}
+echo 'if [ -n "$list" ]; then'   >> ${START}
+echo '    docker rm -f $list'    >> ${START}
+echo 'fi'                        >> ${START}
+echo 'rm -f nohup.out'           >> ${START}
+echo                             >> ${START}
+echo 'nohup docker-compose up &' >> ${START}
 
 # ========================================================================
 
@@ -59,6 +70,29 @@ echo 'list=$(docker ps -aq)'   >> ${STOP}
 echo 'if [ -n "$list" ]; then' >> ${STOP}
 echo '    docker rm -f $list'  >> ${STOP}
 echo 'fi'                      >> ${STOP}
+
+# ========================================================================
+
+echo "cd ${DEST}"       >> ${UPDATE}
+echo                    >> ${UPDATE}
+echo './stop.sh'        >> ${UPDATE}
+echo                    >> ${UPDATE}
+echo 'docker pull azureiotpcs/remote-monitoring-nginx:latest'     >> ${UPDATE}
+echo 'docker pull azureiotpcs/pcs-remote-monitoring-webui:latest' >> ${UPDATE}
+echo 'docker pull azureiotpcs/device-telemetry-java:latest'       >> ${UPDATE}
+echo 'docker pull azureiotpcs/pcs-storage-adapter-dotnet:latest'  >> ${UPDATE}
+echo 'docker pull azureiotpcs/pcs-ui-config-dotnet:latest'        >> ${UPDATE}
+echo 'docker pull azureiotpcs/iothub-manager-dotnet:latest'       >> ${UPDATE}
+echo 'docker pull azureiotpcs/pcs-auth-dotnet:latest'             >> ${UPDATE}
+echo 'docker pull azureiotpcs/iot-stream-analytics-java:latest'   >> ${UPDATE}
+echo 'docker pull azureiotpcs/device-simulation-dotnet:latest'    >> ${UPDATE}
+echo               >> ${UPDATE}
+echo './start.sh'  >> ${UPDATE}
+
+# ========================================================================
+
+echo "cd ${DEST}"        >> ${LOGS}
+echo 'tail -f nohup.out' >> ${LOGS}
 
 # ========================================================================
 
