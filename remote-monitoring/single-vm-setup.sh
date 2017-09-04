@@ -84,7 +84,8 @@ echo '  echo "Waiting for simulation service to be available..."'               
 echo '  sleep 4'                                                                                                                          >> ${SIMULATE}
 echo '  ISUP=$(curl -s http://localhost/devicesimulation/v1/status | grep "Alive" | wc -l)'                                               >> ${SIMULATE}
 echo 'done'                                                                                                                               >> ${SIMULATE}
-echo 'curl -f -s -X POST "http://localhost/devicesimulation/v1/simulations?template=default" -H "content-type: application/json" -d "{}"' >> ${SIMULATE}
+echo 'curl -s -X POST "http://localhost/devicesimulation/v1/simulations?template=default" -H "content-type: application/json" -d "{}"' >> ${SIMULATE}
+echo 'echo'
 
 # ========================================================================
 
