@@ -7,6 +7,7 @@ START="${DEST}/start.sh"
 STOP="${DEST}/stop.sh"
 UPDATE="${DEST}/update.sh"
 LOGS="${DEST}/logs.sh"
+SIMULATE="${DEST}/simulate.sh"
 
 export HOST_NAME="${1:-localhost}"
 export APP_RUNTIME="${3:-dotnet}"
@@ -34,6 +35,7 @@ touch ${START} && chmod 750 ${START}
 touch ${STOP} && chmod 750 ${STOP}
 touch ${UPDATE} && chmod 750 ${UPDATE}
 touch ${LOGS} && chmod 750 ${LOGS}
+touch ${SIMULATE} && chmod 750 ${SIMULATE}
 wget $COMPOSEFILE -O ${DEST}/docker-compose.yml
 
 # ========================================================================
@@ -53,16 +55,41 @@ echo "export PCS_IOTHUBREACT_HUB_ENDPOINT=\"${PCS_IOTHUBREACT_HUB_ENDPOINT}\""  
 echo "export PCS_IOTHUBREACT_HUB_PARTITIONS=\"${PCS_IOTHUBREACT_HUB_PARTITIONS}\""                       >> ${START}
 echo "export PCS_IOTHUBREACT_AZUREBLOB_ACCOUNT=\"${PCS_IOTHUBREACT_AZUREBLOB_ACCOUNT}\""                 >> ${START}
 echo "export PCS_IOTHUBREACT_AZUREBLOB_KEY=\"${PCS_IOTHUBREACT_AZUREBLOB_KEY}\""                         >> ${START}
-echo                             >> ${START}
-echo "cd ${DEST}"                >> ${START}
-echo                             >> ${START}
-echo 'list=$(docker ps -aq)'     >> ${START}
-echo 'if [ -n "$list" ]; then'   >> ${START}
-echo '    docker rm -f $list'    >> ${START}
-echo 'fi'                        >> ${START}
-echo 'rm -f nohup.out'           >> ${START}
-echo                             >> ${START}
-echo 'nohup docker-compose up &' >> ${START}
+echo                                                                >> ${START}
+echo "cd ${DEST}"                                                   >> ${START}
+echo                                                                >> ${START}
+echo 'list=$(docker ps -aq)'                                        >> ${START}
+echo 'if [ -n "$list" ]; then'                                      >> ${START}
+echo '    docker rm -f $list'                                       >> ${START}
+echo 'fi'                                                           >> ${START}
+echo 'rm -f nohup.out'                                              >> ${START}
+echo                                                                >> ${START}
+echo 'nohup docker-compose up &'                                    >> ${START}
+
+# TODO: remove this if/when the Config service takes care of starting the simulation
+echo "nohup ${SIMULATE} &"                                          >> ${START}
+
+echo                                                                >> ${START}
+echo 'ISUP=$(curl -s http://localhost/ | grep -i "html" | wc -l)'   >> ${START}
+echo 'while [[ "$ISUP" == "0" ]]; do'                               >> ${START}
+echo '  echo "Waiting for web site to start..."'                    >> ${START}
+echo '  sleep 3'                                                    >> ${START}
+echo '  ISUP=$(curl -s http://localhost/ | grep -i "html" | wc -l)' >> ${START}
+echo 'done'                                                         >> ${START}
+
+# ========================================================================
+
+# TODO: remove this if/when the Config service takes care of starting the simulation
+echo 'cd /app'                                                                                                                            >> ${SIMULATE}
+echo                                                                                                                                      >> ${SIMULATE}
+echo 'echo "Starting simulation..."'                                                                                                      >> ${SIMULATE}
+echo 'ISUP=$(curl -s http://localhost/devicesimulation/v1/status | grep "Alive" | wc -l)'                                                 >> ${SIMULATE}
+echo 'while [[ "$ISUP" == "0" ]]; do'                                                                                                     >> ${SIMULATE}
+echo '  echo "Waiting for simulation service to be available..."'                                                                         >> ${SIMULATE}
+echo '  sleep 4'                                                                                                                          >> ${SIMULATE}
+echo '  ISUP=$(curl -s http://localhost/devicesimulation/v1/status | grep "Alive" | wc -l)'                                               >> ${SIMULATE}
+echo 'done'                                                                                                                               >> ${SIMULATE}
+echo 'curl -f -s -X POST "http://localhost/devicesimulation/v1/simulations?template=default" -H "content-type: application/json" -d "{}"' >> ${SIMULATE}
 
 # ========================================================================
 
@@ -73,10 +100,10 @@ echo 'fi'                      >> ${STOP}
 
 # ========================================================================
 
-echo "cd ${DEST}"       >> ${UPDATE}
-echo                    >> ${UPDATE}
-echo './stop.sh'        >> ${UPDATE}
-echo                    >> ${UPDATE}
+echo "cd ${DEST}"                                                 >> ${UPDATE}
+echo                                                              >> ${UPDATE}
+echo './stop.sh'                                                  >> ${UPDATE}
+echo                                                              >> ${UPDATE}
 echo 'docker pull azureiotpcs/remote-monitoring-nginx:latest'     >> ${UPDATE}
 echo 'docker pull azureiotpcs/pcs-remote-monitoring-webui:latest' >> ${UPDATE}
 echo 'docker pull azureiotpcs/device-telemetry-java:latest'       >> ${UPDATE}
@@ -86,8 +113,8 @@ echo 'docker pull azureiotpcs/iothub-manager-dotnet:latest'       >> ${UPDATE}
 echo 'docker pull azureiotpcs/pcs-auth-dotnet:latest'             >> ${UPDATE}
 echo 'docker pull azureiotpcs/iot-stream-analytics-java:latest'   >> ${UPDATE}
 echo 'docker pull azureiotpcs/device-simulation-dotnet:latest'    >> ${UPDATE}
-echo               >> ${UPDATE}
-echo './start.sh'  >> ${UPDATE}
+echo                                                              >> ${UPDATE}
+echo './start.sh'                                                 >> ${UPDATE}
 
 # ========================================================================
 
