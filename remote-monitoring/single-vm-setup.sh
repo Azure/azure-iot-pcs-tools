@@ -65,10 +65,6 @@ echo 'fi'                                                           >> ${START}
 echo 'rm -f nohup.out'                                              >> ${START}
 echo                                                                >> ${START}
 echo 'nohup docker-compose up &'                                    >> ${START}
-
-# TODO: remove this if/when the Config service takes care of starting the simulation
-echo "nohup ${SIMULATE} &"                                          >> ${START}
-
 echo                                                                >> ${START}
 echo 'ISUP=$(curl -s http://localhost/ | grep -i "html" | wc -l)'   >> ${START}
 echo 'while [[ "$ISUP" == "0" ]]; do'                               >> ${START}
@@ -79,7 +75,6 @@ echo 'done'                                                         >> ${START}
 
 # ========================================================================
 
-# TODO: remove this if/when the Config service takes care of starting the simulation
 echo 'cd /app'                                                                                                                            >> ${SIMULATE}
 echo                                                                                                                                      >> ${SIMULATE}
 echo 'echo "Starting simulation..."'                                                                                                      >> ${SIMULATE}
