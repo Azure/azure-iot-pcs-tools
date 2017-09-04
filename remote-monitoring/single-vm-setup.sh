@@ -75,15 +75,15 @@ echo 'done'                                                         >> ${START}
 
 # ========================================================================
 
-echo 'cd /app'                                                                                                                            >> ${SIMULATE}
-echo                                                                                                                                      >> ${SIMULATE}
-echo 'echo "Starting simulation..."'                                                                                                      >> ${SIMULATE}
-echo 'ISUP=$(curl -s http://localhost/devicesimulation/v1/status | grep "Alive" | wc -l)'                                                 >> ${SIMULATE}
-echo 'while [[ "$ISUP" == "0" ]]; do'                                                                                                     >> ${SIMULATE}
-echo '  echo "Waiting for simulation service to be available..."'                                                                         >> ${SIMULATE}
-echo '  sleep 4'                                                                                                                          >> ${SIMULATE}
-echo '  ISUP=$(curl -s http://localhost/devicesimulation/v1/status | grep "Alive" | wc -l)'                                               >> ${SIMULATE}
-echo 'done'                                                                                                                               >> ${SIMULATE}
+echo 'cd /app'                                                                                                                         >> ${SIMULATE}
+echo                                                                                                                                   >> ${SIMULATE}
+echo 'echo "Starting simulation..."'                                                                                                   >> ${SIMULATE}
+echo 'ISUP=$(curl -s http://localhost/devicesimulation/v1/status | grep "Alive" | wc -l)'                                              >> ${SIMULATE}
+echo 'while [[ "$ISUP" == "0" ]]; do'                                                                                                  >> ${SIMULATE}
+echo '  echo "Waiting for simulation service to be available..."'                                                                      >> ${SIMULATE}
+echo '  sleep 4'                                                                                                                       >> ${SIMULATE}
+echo '  ISUP=$(curl -s http://localhost/devicesimulation/v1/status | grep "Alive" | wc -l)'                                            >> ${SIMULATE}
+echo 'done'                                                                                                                            >> ${SIMULATE}
 echo 'curl -s -X POST "http://localhost/devicesimulation/v1/simulations?template=default" -H "content-type: application/json" -d "{}"' >> ${SIMULATE}
 echo 'echo'
 
@@ -103,9 +103,13 @@ echo                                                              >> ${UPDATE}
 echo 'docker pull azureiotpcs/remote-monitoring-nginx:latest'     >> ${UPDATE}
 echo 'docker pull azureiotpcs/pcs-remote-monitoring-webui:latest' >> ${UPDATE}
 echo 'docker pull azureiotpcs/device-telemetry-java:latest'       >> ${UPDATE}
+echo 'docker pull azureiotpcs/device-telemetry-dotnet:latest'     >> ${UPDATE}
 echo 'docker pull azureiotpcs/pcs-storage-adapter-dotnet:latest'  >> ${UPDATE}
+echo 'docker pull azureiotpcs/pcs-storage-adapter-java:latest'    >> ${UPDATE}
 echo 'docker pull azureiotpcs/pcs-ui-config-dotnet:latest'        >> ${UPDATE}
+echo 'docker pull azureiotpcs/pcs-ui-config-java:latest'          >> ${UPDATE}
 echo 'docker pull azureiotpcs/iothub-manager-dotnet:latest'       >> ${UPDATE}
+echo 'docker pull azureiotpcs/iothub-manager-java:latest'         >> ${UPDATE}
 echo 'docker pull azureiotpcs/pcs-auth-dotnet:latest'             >> ${UPDATE}
 echo 'docker pull azureiotpcs/iot-stream-analytics-java:latest'   >> ${UPDATE}
 echo 'docker pull azureiotpcs/device-simulation-dotnet:latest'    >> ${UPDATE}
