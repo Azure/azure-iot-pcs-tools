@@ -3,13 +3,15 @@
 set -x
 
 DEST="/app"
-CERT="${DEST}/tls.crt"
-PKEY="${DEST}/tls.key"
 START="${DEST}/start.sh"
 STOP="${DEST}/stop.sh"
 UPDATE="${DEST}/update.sh"
 LOGS="${DEST}/logs.sh"
 SIMULATE="${DEST}/simulate.sh"
+
+CONFIG="${DEST}/config"
+CERT="${CONFIG}/tls.crt"
+PKEY="${CONFIG}/tls.key"
 
 export HOST_NAME="${1:-localhost}"
 export APP_RUNTIME="${3:-dotnet}"
@@ -35,8 +37,6 @@ COMPOSEFILE="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/tls/rem
 
 mkdir -p ${DEST}
 cd ${DEST}
-touch ${CERT}
-touch ${PKEY}
 touch ${START} && chmod 750 ${START}
 touch ${STOP} && chmod 750 ${STOP}
 touch ${UPDATE} && chmod 750 ${UPDATE}
@@ -44,6 +44,9 @@ touch ${LOGS} && chmod 750 ${LOGS}
 touch ${SIMULATE} && chmod 750 ${SIMULATE}
 wget $COMPOSEFILE -O ${DEST}/docker-compose.yml
 
+mkdir -p ${CONFIG}
+touch ${CERT}
+touch ${PKEY}
 # ========================================================================
 
 echo ${PCS_CERTIFICATE}                                                                                  >> ${CERT}
