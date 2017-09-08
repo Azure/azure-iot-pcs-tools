@@ -13,6 +13,8 @@ services:
       - devicesimulation
       - telemetry
       - uiconfig
+    volumes:
+      - /app/config:/app/config:ro
 
   webui:
     image: azureiotpcs/pcs-remote-monitoring-webui:latest
