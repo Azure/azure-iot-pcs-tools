@@ -3,6 +3,8 @@
 set -x
 
 DEST="/app"
+CERT="${DEST}/tls.crt"
+PKEY="${DEST}/tls.key"
 START="${DEST}/start.sh"
 STOP="${DEST}/stop.sh"
 UPDATE="${DEST}/update.sh"
@@ -24,6 +26,8 @@ export PCS_IOTHUBREACT_HUB_ENDPOINT="${11}"
 export PCS_IOTHUBREACT_HUB_PARTITIONS="${12}"
 export PCS_IOTHUBREACT_AZUREBLOB_ACCOUNT="${13}"
 export PCS_IOTHUBREACT_AZUREBLOB_KEY="${14}"
+export PCS_CERTIFICATE="${15}"
+export PCS_CERTIFICATE_KEY="${16}"
 
 COMPOSEFILE="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/master/remote-monitoring/docker-compose.${APP_RUNTIME}.yml"
 
@@ -31,12 +35,19 @@ COMPOSEFILE="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/master/
 
 mkdir -p ${DEST}
 cd ${DEST}
+touch ${CERT}
+touch ${PKEY}
 touch ${START} && chmod 750 ${START}
 touch ${STOP} && chmod 750 ${STOP}
 touch ${UPDATE} && chmod 750 ${UPDATE}
 touch ${LOGS} && chmod 750 ${LOGS}
 touch ${SIMULATE} && chmod 750 ${SIMULATE}
 wget $COMPOSEFILE -O ${DEST}/docker-compose.yml
+
+# ========================================================================
+
+echo ${PCS_CERTIFICATE}                                                                                  >> ${CERT}
+echo ${PCS_CERTIFICATE_KEY}                                                                              >> ${PKEY}
 
 # ========================================================================
 
