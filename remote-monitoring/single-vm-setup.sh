@@ -49,8 +49,8 @@ touch ${CERT}
 touch ${PKEY}
 # ========================================================================
 
-echo ${PCS_CERTIFICATE}                                                                                  >> ${CERT}
-echo ${PCS_CERTIFICATE_KEY}                                                                              >> ${PKEY}
+echo "${PCS_CERTIFICATE}"                                                                                  >> ${CERT}
+echo "${PCS_CERTIFICATE_KEY}"                                                                              >> ${PKEY}
 
 # ========================================================================
 
