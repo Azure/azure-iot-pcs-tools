@@ -49,6 +49,7 @@ touch ${CERT}
 touch ${PKEY}
 # ========================================================================
 
+# Always have quotes around the certificate and key value to preserve the formatting
 echo "${PCS_CERTIFICATE}"                                                                                  >> ${CERT}
 echo "${PCS_CERTIFICATE_KEY}"                                                                              >> ${PKEY}
 
