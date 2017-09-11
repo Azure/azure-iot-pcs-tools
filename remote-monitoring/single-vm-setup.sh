@@ -45,8 +45,8 @@ touch ${SIMULATE} && chmod 750 ${SIMULATE}
 wget $COMPOSEFILE -O ${DEST}/docker-compose.yml
 
 mkdir -p ${CERTS}
-touch ${CERT}
-touch ${PKEY}
+touch ${CERT} && chmod 550 ${CERT}
+touch ${PKEY} && chmod 550 ${PKEY}
 # ========================================================================
 
 # Always have quotes around the certificate and key value to preserve the formatting
