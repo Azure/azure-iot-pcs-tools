@@ -14,7 +14,7 @@ services:
       - telemetry
       - uiconfig
     volumes:
-      - /app/config:/app/config:ro
+      - /app/certs:/app/certs:ro
 
   webui:
     image: azureiotpcs/pcs-remote-monitoring-webui:latest
