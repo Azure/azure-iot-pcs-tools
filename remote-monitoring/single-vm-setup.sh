@@ -31,7 +31,7 @@ export PCS_IOTHUBREACT_AZUREBLOB_KEY="${14}"
 export PCS_CERTIFICATE="${15}"
 export PCS_CERTIFICATE_KEY="${16}"
 
-COMPOSEFILE="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/tls/remote-monitoring/docker-compose.${APP_RUNTIME}.yml"
+COMPOSEFILE="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/master/remote-monitoring/docker-compose.${APP_RUNTIME}.yml"
 
 # ========================================================================
 
