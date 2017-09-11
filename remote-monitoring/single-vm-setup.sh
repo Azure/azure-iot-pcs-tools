@@ -9,9 +9,9 @@ UPDATE="${DEST}/update.sh"
 LOGS="${DEST}/logs.sh"
 SIMULATE="${DEST}/simulate.sh"
 
-CONFIG="${DEST}/config"
-CERT="${CONFIG}/tls.crt"
-PKEY="${CONFIG}/tls.key"
+CERTS="${DEST}/certs"
+CERT="${CERTS}/tls.crt"
+PKEY="${CERTS}/tls.key"
 
 export HOST_NAME="${1:-localhost}"
 export APP_RUNTIME="${3:-dotnet}"
@@ -44,7 +44,7 @@ touch ${LOGS} && chmod 750 ${LOGS}
 touch ${SIMULATE} && chmod 750 ${SIMULATE}
 wget $COMPOSEFILE -O ${DEST}/docker-compose.yml
 
-mkdir -p ${CONFIG}
+mkdir -p ${CERTS}
 touch ${CERT}
 touch ${PKEY}
 # ========================================================================
