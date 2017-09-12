@@ -61,6 +61,7 @@ services:
       - storageadapter
     environment:
       - PCS_STORAGEADAPTER_WEBSERVICE_URL=http://storageadapter:9022/v1
+      - PCS_BINGMAP_KEY
 
   storageadapter:
     image: azureiotpcs/pcs-storage-adapter-java:latest
