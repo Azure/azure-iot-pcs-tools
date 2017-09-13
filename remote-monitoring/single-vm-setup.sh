@@ -32,35 +32,6 @@ export PCS_CERTIFICATE="${15}"
 export PCS_CERTIFICATE_KEY="${16}"
 export PCS_BINGMAP_KEY="${17}"
 
-# ========================================================================
-
-# Install Docker engine based on host name if it is not installed.
-function install_docker() {
-    set +e
-    local host_name=$1
-
-    TEST=$(which docker)
-    if [[ ! -z "$TEST" ]]; then
-        return;
-    fi
-
-    if [[ $host_name =~ ..*cn ]]; then
-        # If the host name has .cn suffix, dockerhub in China will be used to avoid slow network traffic failure.
-        echo "Install Docker engine with China mirror option"
-        curl -ksSL https://get.docker.com/ | sh -s -- --mirror AzureChinaCloud
-        # Setup China docker hub registry mirrors and restart docker engine service
-        local daemon_file='/etc/docker/daemon.json'
-        echo "{\"registry-mirrors\": [\"https://registry.docker-cn.com\"]}" > ${daemon_file}
-        service docker restart
-    else
-        echo "Install Docker engine from official website"
-        curl -ksSL https://get.docker.com/ | sh -s
-    fi
-    set -e
-}
-
-install_docker $HOST_NAME
-
 COMPOSEFILE="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/master/remote-monitoring/docker-compose.${APP_RUNTIME}.yml"
 
 # ========================================================================
