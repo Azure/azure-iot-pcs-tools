@@ -30,6 +30,7 @@ export PCS_IOTHUBREACT_AZUREBLOB_ACCOUNT="${13}"
 export PCS_IOTHUBREACT_AZUREBLOB_KEY="${14}"
 export PCS_CERTIFICATE="${15}"
 export PCS_CERTIFICATE_KEY="${16}"
+export PCS_BINGMAP_KEY="${17}"
 
 # ========================================================================
 
@@ -99,6 +100,7 @@ echo "export PCS_IOTHUBREACT_HUB_ENDPOINT=\"${PCS_IOTHUBREACT_HUB_ENDPOINT}\""  
 echo "export PCS_IOTHUBREACT_HUB_PARTITIONS=\"${PCS_IOTHUBREACT_HUB_PARTITIONS}\""                       >> ${START}
 echo "export PCS_IOTHUBREACT_AZUREBLOB_ACCOUNT=\"${PCS_IOTHUBREACT_AZUREBLOB_ACCOUNT}\""                 >> ${START}
 echo "export PCS_IOTHUBREACT_AZUREBLOB_KEY=\"${PCS_IOTHUBREACT_AZUREBLOB_KEY}\""                         >> ${START}
+echo "export PCS_BINGMAP_KEY=\"${PCS_BINGMAP_KEY}\""                                                     >> ${START}
 echo                                                                >> ${START}
 echo "cd ${DEST}"                                                   >> ${START}
 echo                                                                >> ${START}
