@@ -78,6 +78,7 @@ echo "${PCS_CERTIFICATE_KEY}"                                                   
 
 # ========================================================================
 
+echo "#!/bin/bash"                                                                                       >> ${START}
 echo "export HOST_NAME=\"${HOST_NAME}\""                                                                 >> ${START}
 echo "export APP_RUNTIME=\"${APP_RUNTIME}\""                                                             >> ${START}
 echo "export PCS_AUTH_ISSUER=\"${PCS_AUTH_ISSUER}\""                                                     >> ${START}
@@ -117,6 +118,7 @@ echo 'done'                                                           >> ${START
 
 # ========================================================================
 
+echo '#!/bin/bash'                                                                                                                       >> ${SIMULATE}
 echo 'cd /app'                                                                                                                           >> ${SIMULATE}
 echo                                                                                                                                     >> ${SIMULATE}
 echo 'echo "Starting simulation..."'                                                                                                     >> ${SIMULATE}
@@ -131,6 +133,7 @@ echo 'echo'
 
 # ========================================================================
 
+echo '#!/bin/bash'             >> ${STOP}
 echo 'list=$(docker ps -aq)'   >> ${STOP}
 echo 'if [ -n "$list" ]; then' >> ${STOP}
 echo '    docker rm -f $list'  >> ${STOP}
@@ -138,6 +141,7 @@ echo 'fi'                      >> ${STOP}
 
 # ========================================================================
 
+echo '#!/bin/bash'                                                >> ${UPDATE}
 echo "cd ${DEST}"                                                 >> ${UPDATE}
 echo                                                              >> ${UPDATE}
 echo './stop.sh'                                                  >> ${UPDATE}
@@ -160,6 +164,7 @@ echo './start.sh'                                                 >> ${UPDATE}
 
 # ========================================================================
 
+echo '#!/bin/bash'         >> ${LOGS}
 echo "cd ${DEST}"          >> ${LOGS}
 echo 'docker-compose logs' >> ${LOGS}
 
