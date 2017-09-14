@@ -36,6 +36,23 @@ export PCS_WEBUI_AUTH_TYPE="aad"
 export PCS_WEBUI_AUTH_AAD_TENANT="$5"
 export PCS_WEBUI_AUTH_AAD_APPID="$6"
 
+# ========================================================================
+
+# Configure Docker registry based on host name.
+config_docker() {
+    set +e
+    local host_name=$1
+    if (echo $host_name | grep -c  "\.cn$") ; then
+        # If the host name has .cn suffix, dockerhub in China will be used to avoid slow network traffic failure.
+        local config_file='/etc/docker/daemon.json'
+        echo "{\"registry-mirrors\": [\"https://registry.docker-cn.com\"]}" > ${config_file}
+        service docker restart
+    fi
+    set -e
+}
+
+config_docker $HOST_NAME
+
 COMPOSEFILE="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/master/remote-monitoring/docker-compose.${APP_RUNTIME}.yml"
 
 # ========================================================================
