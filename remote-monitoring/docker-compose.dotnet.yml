@@ -49,8 +49,7 @@ services:
     #  - ./sample-volume:/app/data:ro
 
   telemetry:
-    # TODO Use .NET container
-    image: azureiotpcs/device-telemetry-java:latest
+    image: azureiotpcs/device-telemetry-dotnet:latest
     depends_on:
       - storageadapter
     environment:
@@ -71,8 +70,7 @@ services:
       - PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING
 
   telemetryagent:
-    # TODO Use .NET container
-    image: azureiotpcs/iot-stream-analytics-java:latest
+    image: azureiotpcs/iot-stream-analytics-dotnet:latest
     depends_on:
       - telemetry
       - iothubmanager
