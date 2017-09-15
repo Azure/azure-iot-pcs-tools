@@ -8,6 +8,7 @@ STOP="${DEST}/stop.sh"
 UPDATE="${DEST}/update.sh"
 LOGS="${DEST}/logs.sh"
 SIMULATE="${DEST}/simulate.sh"
+WEBUICONFIG="${DEST}/webui-config.js"
 
 CERTS="${DEST}/certs"
 CERT="${CERTS}/tls.crt"
@@ -30,10 +31,9 @@ export PCS_CERTIFICATE_KEY="${16}"
 export PCS_BINGMAP_KEY="${17}"
 export PCS_AUTH_ISSUER="https://sts.windows.net/${5}/"
 export PCS_AUTH_AUDIENCE="$6"
-# these might be removed soon, work in progress...
-export PCS_AUTH_AAD_GLOBAL_TENANTID="$5"
-export PCS_AUTH_AAD_GLOBAL_CLIENTID="$6"
-export PCS_AUTH_AAD_GLOBAL_LOGINURI="$7"
+export PCS_WEBUI_AUTH_TYPE="aad"
+export PCS_WEBUI_AUTH_AAD_TENANT="$5"
+export PCS_WEBUI_AUTH_AAD_APPID="$6"
 
 COMPOSEFILE="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/master/remote-monitoring/docker-compose.${APP_RUNTIME}.yml"
 
@@ -46,6 +46,7 @@ touch ${STOP} && chmod 750 ${STOP}
 touch ${UPDATE} && chmod 750 ${UPDATE}
 touch ${LOGS} && chmod 750 ${LOGS}
 touch ${SIMULATE} && chmod 750 ${SIMULATE}
+touch ${WEBUICONFIG} && chmod 444 ${WEBUICONFIG}
 wget $COMPOSEFILE -O ${DEST}/docker-compose.yml
 
 mkdir -p ${CERTS}
@@ -142,6 +143,16 @@ echo './start.sh'                                                 >> ${UPDATE}
 
 echo "cd ${DEST}"          >> ${LOGS}
 echo 'docker-compose logs' >> ${LOGS}
+
+# ========================================================================
+
+echo "var DeploymentConfig = {"                     >> ${WEBUICONFIG}
+echo "  authType: '${PCS_WEBUI_AUTH_TYPE}',"        >> ${WEBUICONFIG}
+echo "  aad : {"                                    >> ${WEBUICONFIG}
+echo "    tenant: '${PCS_WEBUI_AUTH_AAD_TENANT}',"  >> ${WEBUICONFIG}
+echo "    appId: '${PCS_WEBUI_AUTH_AAD_APPID}'"     >> ${WEBUICONFIG}
+echo "  }"                                          >> ${WEBUICONFIG}
+echo "}"                                            >> ${WEBUICONFIG}
 
 # ========================================================================
 
