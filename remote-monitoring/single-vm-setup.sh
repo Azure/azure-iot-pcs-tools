@@ -26,9 +26,10 @@ export PCS_IOTHUBREACT_HUB_ENDPOINT="${11}"
 export PCS_IOTHUBREACT_HUB_PARTITIONS="${12}"
 export PCS_IOTHUBREACT_AZUREBLOB_ACCOUNT="${13}"
 export PCS_IOTHUBREACT_AZUREBLOB_KEY="${14}"
-export PCS_CERTIFICATE="${15}"
-export PCS_CERTIFICATE_KEY="${16}"
-export PCS_BINGMAP_KEY="${17}"
+export PCS_IOTHUBREACT_AZUREBLOB_ENDPOINT_SUFFIX="${15}"
+export PCS_CERTIFICATE="${16}"
+export PCS_CERTIFICATE_KEY="${17}"
+export PCS_BINGMAP_KEY="${18}"
 export PCS_AUTH_ISSUER="https://sts.windows.net/${5}/"
 export PCS_AUTH_AUDIENCE="$6"
 export PCS_WEBUI_AUTH_TYPE="aad"
@@ -77,6 +78,7 @@ echo "export PCS_IOTHUBREACT_HUB_ENDPOINT=\"${PCS_IOTHUBREACT_HUB_ENDPOINT}\""  
 echo "export PCS_IOTHUBREACT_HUB_PARTITIONS=\"${PCS_IOTHUBREACT_HUB_PARTITIONS}\""                       >> ${START}
 echo "export PCS_IOTHUBREACT_AZUREBLOB_ACCOUNT=\"${PCS_IOTHUBREACT_AZUREBLOB_ACCOUNT}\""                 >> ${START}
 echo "export PCS_IOTHUBREACT_AZUREBLOB_KEY=\"${PCS_IOTHUBREACT_AZUREBLOB_KEY}\""                         >> ${START}
+echo "export PCS_IOTHUBREACT_AZUREBLOB_ENDPOINT_SUFFIX=\"${PCS_IOTHUBREACT_AZUREBLOB_ENDPOINT_SUFFIX}\"" >> ${START}
 echo "export PCS_BINGMAP_KEY=\"${PCS_BINGMAP_KEY}\""                                                     >> ${START}
 echo                                                                  >> ${START}
 echo "cd ${DEST}"                                                     >> ${START}
