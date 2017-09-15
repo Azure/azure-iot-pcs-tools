@@ -15,9 +15,6 @@ PKEY="${CERTS}/tls.key"
 
 export HOST_NAME="${1:-localhost}"
 export APP_RUNTIME="${3:-dotnet}"
-export PCS_AUTH_AAD_GLOBAL_TENANTID="$5"
-export PCS_AUTH_AAD_GLOBAL_CLIENTID="$6"
-export PCS_AUTH_AAD_GLOBAL_LOGINURI="$7"
 export PCS_IOTHUB_CONNSTRING="$8"
 export PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING="$9"
 export PCS_DEVICETELEMETRY_DOCUMENTDB_CONNSTRING="$9"
@@ -31,6 +28,12 @@ export PCS_IOTHUBREACT_AZUREBLOB_KEY="${14}"
 export PCS_CERTIFICATE="${15}"
 export PCS_CERTIFICATE_KEY="${16}"
 export PCS_BINGMAP_KEY="${17}"
+export PCS_AUTH_ISSUER="https://sts.windows.net/${5}/"
+export PCS_AUTH_AUDIENCE="$6"
+# these might be removed soon, work in progress...
+export PCS_AUTH_AAD_GLOBAL_TENANTID="$5"
+export PCS_AUTH_AAD_GLOBAL_CLIENTID="$6"
+export PCS_AUTH_AAD_GLOBAL_LOGINURI="$7"
 
 COMPOSEFILE="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/master/remote-monitoring/docker-compose.${APP_RUNTIME}.yml"
 
@@ -58,6 +61,8 @@ echo "${PCS_CERTIFICATE_KEY}"                                                   
 
 echo "export HOST_NAME=\"${HOST_NAME}\""                                                                 >> ${START}
 echo "export APP_RUNTIME=\"${APP_RUNTIME}\""                                                             >> ${START}
+echo "export PCS_AUTH_ISSUER=\"${PCS_AUTH_ISSUER}\""                                                     >> ${START}
+echo "export PCS_AUTH_AUDIENCE=\"${PCS_AUTH_AUDIENCE}\""                                                 >> ${START}
 echo "export PCS_AUTH_AAD_GLOBAL_TENANTID=\"${PCS_AUTH_AAD_GLOBAL_TENANTID}\""                           >> ${START}
 echo "export PCS_AUTH_AAD_GLOBAL_CLIENTID=\"${PCS_AUTH_AAD_GLOBAL_CLIENTID}\""                           >> ${START}
 echo "export PCS_AUTH_AAD_GLOBAL_LOGINURI=\"${PCS_AUTH_AAD_GLOBAL_LOGINURI}\""                           >> ${START}

@@ -29,7 +29,8 @@ services:
     # TODO Use Java container
     image: azureiotpcs/pcs-auth-dotnet
     environment:
-      - PCS_AUTH_AAD_GLOBAL_TENANTID=ToDo
+      - PCS_AUTH_ISSUER
+      - PCS_AUTH_AUDIENCE
 
   iothubmanager:
     image: azureiotpcs/iothub-manager-java
