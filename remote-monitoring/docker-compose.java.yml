@@ -58,8 +58,7 @@ services:
       - PCS_STORAGEADAPTER_WEBSERVICE_URL=http://storageadapter:9022/v1
 
   uiconfig:
-    # TODO Use Java container
-    image: azureiotpcs/pcs-ui-config-dotnet:latest
+    image: azureiotpcs/pcs-ui-config-java:latest
     depends_on:
       - storageadapter
     environment:
