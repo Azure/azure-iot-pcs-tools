@@ -24,6 +24,8 @@ services:
       - devicesimulation
       - telemetry
       - uiconfig
+    volumes:
+      - /app/webui-config.js:/app/build/config.js:ro
 
   auth:
     image: azureiotpcs/pcs-auth-dotnet
