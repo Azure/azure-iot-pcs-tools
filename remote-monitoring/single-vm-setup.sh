@@ -147,6 +147,7 @@ echo 'docker-compose logs' >> ${LOGS}
 # ========================================================================
 
 echo "var DeploymentConfig = {"                     >> ${WEBUICONFIG}
+echo "  authEnabled: false,"                        >> ${WEBUICONFIG}
 echo "  authType: '${PCS_WEBUI_AUTH_TYPE}',"        >> ${WEBUICONFIG}
 echo "  aad : {"                                    >> ${WEBUICONFIG}
 echo "    tenant: '${PCS_WEBUI_AUTH_AAD_TENANT}',"  >> ${WEBUICONFIG}
