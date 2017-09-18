@@ -12,7 +12,7 @@ services:
       - iothubmanager
       - devicesimulation
       - telemetry
-      - uiconfig
+      - config
     volumes:
       - /app/certs:/app/certs:ro
 
@@ -23,7 +23,7 @@ services:
       - iothubmanager
       - devicesimulation
       - telemetry
-      - uiconfig
+      - config
     volumes:
       - /app/webui-config.js:/app/build/config.js:ro
 
@@ -33,14 +33,20 @@ services:
     environment:
       - PCS_AUTH_ISSUER
       - PCS_AUTH_AUDIENCE
+      - PCS_APPLICATION_SECRET
 
   iothubmanager:
     image: azureiotpcs/iothub-manager-java
     depends_on:
-      - uiconfig
+      - config
     environment:
       - PCS_IOTHUB_CONNSTRING
-      - PCS_UICONFIG_WEBSERVICE_URL=http://uiconfig:9005/v1
+      # TODO: remove this and keep only PCS_CONFIG_WEBSERVICE_URL
+      - PCS_UICONFIG_WEBSERVICE_URL=http://config:9005/v1
+      - PCS_CONFIG_WEBSERVICE_URL=http://config:9005/v1
+      - PCS_AUTH_ISSUER
+      - PCS_AUTH_AUDIENCE
+      - PCS_APPLICATION_SECRET
 
   devicesimulation:
     image: azureiotpcs/device-simulation-dotnet:latest
@@ -49,6 +55,9 @@ services:
     environment:
       - PCS_IOTHUB_CONNSTRING
       - PCS_STORAGEADAPTER_WEBSERVICE_URL=http://storageadapter:9022/v1
+      - PCS_AUTH_ISSUER
+      - PCS_AUTH_AUDIENCE
+      - PCS_APPLICATION_SECRET
     #volumes:
     #  - ./sample-volume:/app/data:ro
 
@@ -59,8 +68,11 @@ services:
     environment:
       - PCS_DEVICETELEMETRY_DOCUMENTDB_CONNSTRING
       - PCS_STORAGEADAPTER_WEBSERVICE_URL=http://storageadapter:9022/v1
+      - PCS_AUTH_ISSUER
+      - PCS_AUTH_AUDIENCE
+      - PCS_APPLICATION_SECRET
 
-  uiconfig:
+  config:
     image: azureiotpcs/pcs-ui-config-java:latest
     depends_on:
       - storageadapter
@@ -73,21 +85,32 @@ services:
       - PCS_DEVICETELEMETRY_WEBSERVICE_URL=http://telemetry:9004/v1
       - PCS_IOTHUBMANAGER_WEBSERVICE_URL=http://iothubmanager:9002/v1
       - PCS_BINGMAP_KEY
+      - PCS_AUTH_ISSUER
+      - PCS_AUTH_AUDIENCE
+      - PCS_APPLICATION_SECRET
 
   storageadapter:
     image: azureiotpcs/pcs-storage-adapter-java:latest
     environment:
       - PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING
+      - PCS_AUTH_ISSUER
+      - PCS_AUTH_AUDIENCE
+      - PCS_APPLICATION_SECRET
 
   telemetryagent:
+    # TODO: rename image to telemetry-agent-java
     image: azureiotpcs/iot-stream-analytics-java:latest
     depends_on:
       - telemetry
       - iothubmanager
     environment:
+      # TODO: remove this and keep only PCS_TELEMETRYAGENT_DOCUMENTDB_CONNSTRING
       - PCS_STREAMANALYTICS_DOCUMENTDB_CONNSTRING
+      - PCS_TELEMETRYAGENT_DOCUMENTDB_CONNSTRING
       - PCS_DEVICETELEMETRY_WEBSERVICE_URL=http://telemetry:9004/v1
-      - PCS_UICONFIG_WEBSERVICE_URL=http://uiconfig:9005/v1
+      # TODO: remove this and keep only PCS_CONFIG_WEBSERVICE_URL
+      - PCS_UICONFIG_WEBSERVICE_URL=http://config:9005/v1
+      - PCS_CONFIG_WEBSERVICE_URL=http://config:9005/v1
       - PCS_IOTHUBMANAGER_WEBSERVICE_URL=http://iothubmanager:9002/v1
       - PCS_IOTHUBREACT_AZUREBLOB_ACCOUNT
       - PCS_IOTHUBREACT_AZUREBLOB_KEY
@@ -96,3 +119,6 @@ services:
       - PCS_IOTHUBREACT_HUB_ENDPOINT
       - PCS_IOTHUBREACT_HUB_PARTITIONS
       - PCS_IOTHUBREACT_ACCESS_CONNSTRING
+      - PCS_AUTH_ISSUER
+      - PCS_AUTH_AUDIENCE
+      - PCS_APPLICATION_SECRET

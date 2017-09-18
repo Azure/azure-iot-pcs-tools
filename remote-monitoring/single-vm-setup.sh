@@ -35,6 +35,7 @@ export PCS_AUTH_AUDIENCE="$6"
 export PCS_WEBUI_AUTH_TYPE="aad"
 export PCS_WEBUI_AUTH_AAD_TENANT="$5"
 export PCS_WEBUI_AUTH_AAD_APPID="$6"
+export PCS_APPLICATION_SECRET=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-zA-Z0-9-,./;:[]\(\)_=^!~' | fold -w 64 | head -n 1)
 
 # ========================================================================
 
@@ -98,6 +99,7 @@ echo "export PCS_IOTHUBREACT_AZUREBLOB_ACCOUNT=\"${PCS_IOTHUBREACT_AZUREBLOB_ACC
 echo "export PCS_IOTHUBREACT_AZUREBLOB_KEY=\"${PCS_IOTHUBREACT_AZUREBLOB_KEY}\""                         >> ${START}
 echo "export PCS_IOTHUBREACT_AZUREBLOB_ENDPOINT_SUFFIX=\"${PCS_IOTHUBREACT_AZUREBLOB_ENDPOINT_SUFFIX}\"" >> ${START}
 echo "export PCS_BINGMAP_KEY=\"${PCS_BINGMAP_KEY}\""                                                     >> ${START}
+echo "export PCS_APPLICATION_SECRET=\"${PCS_APPLICATION_SECRET}\""                                       >> ${START}
 echo                                                                  >> ${START}
 echo "cd ${DEST}"                                                     >> ${START}
 echo                                                                  >> ${START}
