@@ -35,8 +35,11 @@ services:
 
   iothubmanager:
     image: azureiotpcs/iothub-manager-dotnet
+    depends_on:
+      - uiconfig
     environment:
       - PCS_IOTHUB_CONNSTRING
+      - PCS_UICONFIG_WEBSERVICE_URL=http://uiconfig:9005/v1
 
   devicesimulation:
     image: azureiotpcs/device-simulation-dotnet:latest
