@@ -36,6 +36,23 @@ export PCS_WEBUI_AUTH_TYPE="aad"
 export PCS_WEBUI_AUTH_AAD_TENANT="$5"
 export PCS_WEBUI_AUTH_AAD_APPID="$6"
 
+# ========================================================================
+
+# Configure Docker registry based on host name.
+config_docker() {
+    set +e
+    local host_name=$1
+    if (echo $host_name | grep -c  "\.cn$") ; then
+        # If the host name has .cn suffix, dockerhub in China will be used to avoid slow network traffic failure.
+        local config_file='/etc/docker/daemon.json'
+        echo "{\"registry-mirrors\": [\"https://registry.docker-cn.com\"]}" > ${config_file}
+        service docker restart
+    fi
+    set -e
+}
+
+config_docker $HOST_NAME
+
 COMPOSEFILE="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/master/remote-monitoring/docker-compose.${APP_RUNTIME}.yml"
 
 # ========================================================================
@@ -61,6 +78,7 @@ echo "${PCS_CERTIFICATE_KEY}"                                                   
 
 # ========================================================================
 
+echo "#!/bin/bash"                                                                                       >> ${START}
 echo "export HOST_NAME=\"${HOST_NAME}\""                                                                 >> ${START}
 echo "export APP_RUNTIME=\"${APP_RUNTIME}\""                                                             >> ${START}
 echo "export PCS_AUTH_ISSUER=\"${PCS_AUTH_ISSUER}\""                                                     >> ${START}
@@ -100,6 +118,7 @@ echo 'done'                                                           >> ${START
 
 # ========================================================================
 
+echo '#!/bin/bash'                                                                                                                       >> ${SIMULATE}
 echo 'cd /app'                                                                                                                           >> ${SIMULATE}
 echo                                                                                                                                     >> ${SIMULATE}
 echo 'echo "Starting simulation..."'                                                                                                     >> ${SIMULATE}
@@ -114,6 +133,7 @@ echo 'echo'
 
 # ========================================================================
 
+echo '#!/bin/bash'             >> ${STOP}
 echo 'list=$(docker ps -aq)'   >> ${STOP}
 echo 'if [ -n "$list" ]; then' >> ${STOP}
 echo '    docker rm -f $list'  >> ${STOP}
@@ -121,6 +141,7 @@ echo 'fi'                      >> ${STOP}
 
 # ========================================================================
 
+echo '#!/bin/bash'                                                >> ${UPDATE}
 echo "cd ${DEST}"                                                 >> ${UPDATE}
 echo                                                              >> ${UPDATE}
 echo './stop.sh'                                                  >> ${UPDATE}
@@ -143,6 +164,7 @@ echo './start.sh'                                                 >> ${UPDATE}
 
 # ========================================================================
 
+echo '#!/bin/bash'         >> ${LOGS}
 echo "cd ${DEST}"          >> ${LOGS}
 echo 'docker-compose logs' >> ${LOGS}
 
