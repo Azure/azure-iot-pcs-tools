@@ -18,8 +18,8 @@ export HOST_NAME="${1:-localhost}"
 export APP_RUNTIME="${3:-dotnet}"
 export PCS_IOTHUB_CONNSTRING="$8"
 export PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING="$9"
-export PCS_DEVICETELEMETRY_DOCUMENTDB_CONNSTRING="$9"
-export PCS_STREAMANALYTICS_DOCUMENTDB_CONNSTRING="$9"
+export PCS_TELEMETRY_DOCUMENTDB_CONNSTRING="$9"
+export PCS_TELEMETRYAGENT_DOCUMENTDB_CONNSTRING="$9"
 export PCS_IOTHUBREACT_ACCESS_CONNSTRING="$8"
 export PCS_IOTHUBREACT_HUB_NAME="${10}"
 export PCS_IOTHUBREACT_HUB_ENDPOINT="${11}"
@@ -89,8 +89,8 @@ echo "export PCS_AUTH_AAD_GLOBAL_CLIENTID=\"${PCS_AUTH_AAD_GLOBAL_CLIENTID}\""  
 echo "export PCS_AUTH_AAD_GLOBAL_LOGINURI=\"${PCS_AUTH_AAD_GLOBAL_LOGINURI}\""                           >> ${START}
 echo "export PCS_IOTHUB_CONNSTRING=\"${PCS_IOTHUB_CONNSTRING}\""                                         >> ${START}
 echo "export PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING=\"${PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING}\""   >> ${START}
-echo "export PCS_DEVICETELEMETRY_DOCUMENTDB_CONNSTRING=\"${PCS_DEVICETELEMETRY_DOCUMENTDB_CONNSTRING}\"" >> ${START}
-echo "export PCS_STREAMANALYTICS_DOCUMENTDB_CONNSTRING=\"${PCS_STREAMANALYTICS_DOCUMENTDB_CONNSTRING}\"" >> ${START}
+echo "export PCS_TELEMETRY_DOCUMENTDB_CONNSTRING=\"${PCS_TELEMETRY_DOCUMENTDB_CONNSTRING}\""             >> ${START}
+echo "export PCS_TELEMETRYAGENT_DOCUMENTDB_CONNSTRING=\"${PCS_TELEMETRYAGENT_DOCUMENTDB_CONNSTRING}\"" >> ${START}
 echo "export PCS_IOTHUBREACT_ACCESS_CONNSTRING=\"${PCS_IOTHUBREACT_ACCESS_CONNSTRING}\""                 >> ${START}
 echo "export PCS_IOTHUBREACT_HUB_NAME=\"${PCS_IOTHUBREACT_HUB_NAME}\""                                   >> ${START}
 echo "export PCS_IOTHUBREACT_HUB_ENDPOINT=\"${PCS_IOTHUBREACT_HUB_ENDPOINT}\""                           >> ${START}
@@ -150,17 +150,18 @@ echo './stop.sh'                                                  >> ${UPDATE}
 echo                                                              >> ${UPDATE}
 echo 'docker pull azureiotpcs/remote-monitoring-nginx:latest'     >> ${UPDATE}
 echo 'docker pull azureiotpcs/pcs-remote-monitoring-webui:latest' >> ${UPDATE}
-echo 'docker pull azureiotpcs/device-telemetry-java:latest'       >> ${UPDATE}
-echo 'docker pull azureiotpcs/device-telemetry-dotnet:latest'     >> ${UPDATE}
+echo 'docker pull azureiotpcs/pcs-auth-dotnet:latest'             >> ${UPDATE}
+echo 'docker pull azureiotpcs/device-simulation-dotnet:latest'    >> ${UPDATE}
 echo 'docker pull azureiotpcs/pcs-storage-adapter-dotnet:latest'  >> ${UPDATE}
 echo 'docker pull azureiotpcs/pcs-storage-adapter-java:latest'    >> ${UPDATE}
-echo 'docker pull azureiotpcs/pcs-ui-config-dotnet:latest'        >> ${UPDATE}
-echo 'docker pull azureiotpcs/pcs-ui-config-java:latest'          >> ${UPDATE}
+echo 'docker pull azureiotpcs/pcs-config-dotnet:latest'           >> ${UPDATE}
+echo 'docker pull azureiotpcs/pcs-config-java:latest'             >> ${UPDATE}
 echo 'docker pull azureiotpcs/iothub-manager-dotnet:latest'       >> ${UPDATE}
 echo 'docker pull azureiotpcs/iothub-manager-java:latest'         >> ${UPDATE}
-echo 'docker pull azureiotpcs/pcs-auth-dotnet:latest'             >> ${UPDATE}
-echo 'docker pull azureiotpcs/iot-stream-analytics-java:latest'   >> ${UPDATE}
-echo 'docker pull azureiotpcs/device-simulation-dotnet:latest'    >> ${UPDATE}
+echo 'docker pull azureiotpcs/telemetry-java:latest'              >> ${UPDATE}
+echo 'docker pull azureiotpcs/telemetry-dotnet:latest'            >> ${UPDATE}
+echo 'docker pull azureiotpcs/telemetry-agent-java:latest'        >> ${UPDATE}
+echo 'docker pull azureiotpcs/telemetry-agent-dotnet:latest'      >> ${UPDATE}
 echo                                                              >> ${UPDATE}
 echo './start.sh'                                                 >> ${UPDATE}
 
