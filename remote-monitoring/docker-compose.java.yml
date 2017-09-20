@@ -33,6 +33,7 @@ services:
     environment:
       - PCS_AUTH_ISSUER
       - PCS_AUTH_AUDIENCE
+      - PCS_AUTH_REQUIRED
       - PCS_APPLICATION_SECRET
 
   iothubmanager:
@@ -43,6 +44,7 @@ services:
       - PCS_CONFIG_WEBSERVICE_URL=http://config:9005/v1
       - PCS_AUTH_ISSUER
       - PCS_AUTH_AUDIENCE
+      - PCS_AUTH_REQUIRED
       - PCS_APPLICATION_SECRET
 
   devicesimulation:
@@ -54,6 +56,7 @@ services:
       - PCS_STORAGEADAPTER_WEBSERVICE_URL=http://storageadapter:9022/v1
       - PCS_AUTH_ISSUER
       - PCS_AUTH_AUDIENCE
+      - PCS_AUTH_REQUIRED
       - PCS_APPLICATION_SECRET
     #volumes:
     #  - ./sample-volume:/app/data:ro
@@ -67,6 +70,7 @@ services:
       - PCS_STORAGEADAPTER_WEBSERVICE_URL=http://storageadapter:9022/v1
       - PCS_AUTH_ISSUER
       - PCS_AUTH_AUDIENCE
+      - PCS_AUTH_REQUIRED
       - PCS_APPLICATION_SECRET
 
   config:
@@ -84,6 +88,7 @@ services:
       - PCS_BINGMAP_KEY
       - PCS_AUTH_ISSUER
       - PCS_AUTH_AUDIENCE
+      - PCS_AUTH_REQUIRED
       - PCS_APPLICATION_SECRET
 
   storageadapter:
@@ -92,6 +97,7 @@ services:
       - PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING
       - PCS_AUTH_ISSUER
       - PCS_AUTH_AUDIENCE
+      - PCS_AUTH_REQUIRED
       - PCS_APPLICATION_SECRET
 
   telemetryagent:
@@ -114,4 +120,5 @@ services:
       - PCS_IOTHUBREACT_ACCESS_CONNSTRING
       - PCS_AUTH_ISSUER
       - PCS_AUTH_AUDIENCE
+      - PCS_AUTH_REQUIRED
       - PCS_APPLICATION_SECRET
