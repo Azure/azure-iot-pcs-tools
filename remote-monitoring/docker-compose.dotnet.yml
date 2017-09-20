@@ -25,7 +25,7 @@ services:
       - telemetry
       - config
     volumes:
-      - /app/webui-config.js:/app/build/config.js:ro
+      - /app/webui-config.js:/app/build/webui-config.js:ro
 
   auth:
     image: azureiotpcs/pcs-auth-dotnet
