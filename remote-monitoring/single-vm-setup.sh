@@ -80,6 +80,11 @@ echo "${PCS_CERTIFICATE_KEY}"                                                   
 # ========================================================================
 
 echo "#!/bin/bash"                                                                                       >> ${START}
+echo ""                                                                                                  >> ${START}
+echo "# Development settings, you shouldn't need to change this in Production"                           >> ${START}
+echo "export PCS_AUTH_REQUIRED=\"\""                                                                     >> ${START}
+echo "export CORS_WHITELIST=\"\""                                                                        >> ${START}
+echo ""                                                                                                  >> ${START}
 echo "export HOST_NAME=\"${HOST_NAME}\""                                                                 >> ${START}
 echo "export APP_RUNTIME=\"${APP_RUNTIME}\""                                                             >> ${START}
 echo "export PCS_AUTH_ISSUER=\"${PCS_AUTH_ISSUER}\""                                                     >> ${START}
@@ -90,7 +95,7 @@ echo "export PCS_AUTH_AAD_GLOBAL_LOGINURI=\"${PCS_AUTH_AAD_GLOBAL_LOGINURI}\""  
 echo "export PCS_IOTHUB_CONNSTRING=\"${PCS_IOTHUB_CONNSTRING}\""                                         >> ${START}
 echo "export PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING=\"${PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING}\""   >> ${START}
 echo "export PCS_TELEMETRY_DOCUMENTDB_CONNSTRING=\"${PCS_TELEMETRY_DOCUMENTDB_CONNSTRING}\""             >> ${START}
-echo "export PCS_TELEMETRYAGENT_DOCUMENTDB_CONNSTRING=\"${PCS_TELEMETRYAGENT_DOCUMENTDB_CONNSTRING}\"" >> ${START}
+echo "export PCS_TELEMETRYAGENT_DOCUMENTDB_CONNSTRING=\"${PCS_TELEMETRYAGENT_DOCUMENTDB_CONNSTRING}\""   >> ${START}
 echo "export PCS_IOTHUBREACT_ACCESS_CONNSTRING=\"${PCS_IOTHUBREACT_ACCESS_CONNSTRING}\""                 >> ${START}
 echo "export PCS_IOTHUBREACT_HUB_NAME=\"${PCS_IOTHUBREACT_HUB_NAME}\""                                   >> ${START}
 echo "export PCS_IOTHUBREACT_HUB_ENDPOINT=\"${PCS_IOTHUBREACT_HUB_ENDPOINT}\""                           >> ${START}
