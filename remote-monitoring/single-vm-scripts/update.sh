@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
 # Where to download scripts from
-SET SCRIPTS_REPO=https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/master/remote-monitoring/single-vm-scripts/
+SCRIPTS_REPO=https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/master/remote-monitoring/single-vm-scripts/
 
 cd /app
 
