@@ -1,5 +1,9 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 cd /app
 
-docker-compose logs
+if [[ "$1" == "" ]]; then
+  docker-compose logs
+else
+  docker logs -f --tail 100 $1
+fi

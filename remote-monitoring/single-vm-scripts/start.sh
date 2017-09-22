@@ -4,6 +4,17 @@ cd /app
 
 source "env-vars"
 
+COL_NO="\033[0m" # no color
+COL_ERR="\033[1;31m" # light red
+
+if [[ "$1" == "--unsafe" ]]; then
+  echo -e "${COL_ERR}WARNING! Starting services in UNSAFE mode!${COL_NO}"
+  # Disable Auth
+  export PCS_AUTH_REQUIRED="false"
+  # Allow cross-origin requests from anywhere
+  export PCS_CORS_WHITELIST="{ 'origins': ['*'], 'methods': ['*'], 'headers': ['*'] }"
+fi
+
 list=$(docker ps -aq)
 if [ -n "$list" ]; then
     docker rm -f $list

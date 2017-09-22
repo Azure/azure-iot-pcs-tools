@@ -1,18 +1,16 @@
-#!/bin/bash
+#!/bin/bash -ex
 
-set -x
-
-DEST="/app"
-START="${DEST}/start.sh"
-STOP="${DEST}/stop.sh"
-UPDATE="${DEST}/update.sh"
-LOGS="${DEST}/logs.sh"
-SIMULATE="${DEST}/simulate.sh"
-WEBUICONFIG="${DEST}/webui-config.js"
-
-CERTS="${DEST}/certs"
+APP_PATH="/app"
+WEBUICONFIG="${APP_PATH}/webui-config.js"
+ENVVARS="${APP_PATH}/env-vars"
+DOCKERCOMPOSE="${APP_PATH}/docker-compose.yml"
+CERTS="${APP_PATH}/certs"
 CERT="${CERTS}/tls.crt"
 PKEY="${CERTS}/tls.key"
+
+SCRIPTS_REPO="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/master/remote-monitoring/single-vm-scripts/"
+
+# ========================================================================
 
 export HOST_NAME="${1:-localhost}"
 export APP_RUNTIME="${3:-dotnet}"
@@ -39,7 +37,7 @@ export PCS_APPLICATION_SECRET=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-zA-Z0-9-
 
 # ========================================================================
 
-# Configure Docker registry based on host name.
+# Configure Docker registry based on host name
 config_docker() {
     set +e
     local host_name=$1
@@ -54,134 +52,42 @@ config_docker() {
 
 config_docker $HOST_NAME
 
-COMPOSEFILE="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/master/remote-monitoring/docker-compose.${APP_RUNTIME}.yml"
+# ========================================================================
+
+mkdir -p ${APP_PATH}
+cd ${APP_PATH}
 
 # ========================================================================
 
-mkdir -p ${DEST}
-cd ${DEST}
-touch ${START} && chmod 750 ${START}
-touch ${STOP} && chmod 750 ${STOP}
-touch ${UPDATE} && chmod 750 ${UPDATE}
-touch ${LOGS} && chmod 750 ${LOGS}
-touch ${SIMULATE} && chmod 750 ${SIMULATE}
-touch ${WEBUICONFIG} && chmod 444 ${WEBUICONFIG}
-wget $COMPOSEFILE -O ${DEST}/docker-compose.yml
+# Docker compose file
+DC_SOURCE="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/master/remote-monitoring/docker-compose.${APP_RUNTIME}.yml"
+wget $DC_SOURCE -O ${DOCKERCOMPOSE}
 
+# ========================================================================
+
+# HTTPS certificates
 mkdir -p ${CERTS}
 touch ${CERT} && chmod 550 ${CERT}
 touch ${PKEY} && chmod 550 ${PKEY}
-# ========================================================================
-
 # Always have quotes around the certificate and key value to preserve the formatting
-echo "${PCS_CERTIFICATE}"                                                                                >> ${CERT}
-echo "${PCS_CERTIFICATE_KEY}"                                                                            >> ${PKEY}
+echo "${PCS_CERTIFICATE}"      > ${CERT}
+echo "${PCS_CERTIFICATE_KEY}"  > ${PKEY}
 
 # ========================================================================
 
-echo "#!/bin/bash"                                                                                       >> ${START}
-echo "set -e"                                                                                            >> ${START}
-echo ""                                                                                                  >> ${START}
-echo "# Format: true | false  -- (empty = true)"                                                         >> ${START}
-echo "export PCS_AUTH_REQUIRED=\"\""                                                                     >> ${START}
-echo "# Format: \{ 'origins': ['*'], 'methods': ['*'], 'headers': ['*'] \}"                              >> ${START}
-echo "export PCS_CORS_WHITELIST=\"\""                                                                    >> ${START}
-echo ""                                                                                                  >> ${START}
-echo "export HOST_NAME=\"${HOST_NAME}\""                                                                 >> ${START}
-echo "export APP_RUNTIME=\"${APP_RUNTIME}\""                                                             >> ${START}
-echo "export PCS_AUTH_ISSUER=\"${PCS_AUTH_ISSUER}\""                                                     >> ${START}
-echo "export PCS_AUTH_AUDIENCE=\"${PCS_AUTH_AUDIENCE}\""                                                 >> ${START}
-echo "export PCS_AUTH_AAD_GLOBAL_TENANTID=\"${PCS_AUTH_AAD_GLOBAL_TENANTID}\""                           >> ${START}
-echo "export PCS_AUTH_AAD_GLOBAL_CLIENTID=\"${PCS_AUTH_AAD_GLOBAL_CLIENTID}\""                           >> ${START}
-echo "export PCS_AUTH_AAD_GLOBAL_LOGINURI=\"${PCS_AUTH_AAD_GLOBAL_LOGINURI}\""                           >> ${START}
-echo "export PCS_IOTHUB_CONNSTRING=\"${PCS_IOTHUB_CONNSTRING}\""                                         >> ${START}
-echo "export PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING=\"${PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING}\""   >> ${START}
-echo "export PCS_TELEMETRY_DOCUMENTDB_CONNSTRING=\"${PCS_TELEMETRY_DOCUMENTDB_CONNSTRING}\""             >> ${START}
-echo "export PCS_TELEMETRYAGENT_DOCUMENTDB_CONNSTRING=\"${PCS_TELEMETRYAGENT_DOCUMENTDB_CONNSTRING}\""   >> ${START}
-echo "export PCS_IOTHUBREACT_ACCESS_CONNSTRING=\"${PCS_IOTHUBREACT_ACCESS_CONNSTRING}\""                 >> ${START}
-echo "export PCS_IOTHUBREACT_HUB_NAME=\"${PCS_IOTHUBREACT_HUB_NAME}\""                                   >> ${START}
-echo "export PCS_IOTHUBREACT_HUB_ENDPOINT=\"${PCS_IOTHUBREACT_HUB_ENDPOINT}\""                           >> ${START}
-echo "export PCS_IOTHUBREACT_HUB_PARTITIONS=\"${PCS_IOTHUBREACT_HUB_PARTITIONS}\""                       >> ${START}
-echo "export PCS_IOTHUBREACT_AZUREBLOB_ACCOUNT=\"${PCS_IOTHUBREACT_AZUREBLOB_ACCOUNT}\""                 >> ${START}
-echo "export PCS_IOTHUBREACT_AZUREBLOB_KEY=\"${PCS_IOTHUBREACT_AZUREBLOB_KEY}\""                         >> ${START}
-echo "export PCS_IOTHUBREACT_AZUREBLOB_ENDPOINT_SUFFIX=\"${PCS_IOTHUBREACT_AZUREBLOB_ENDPOINT_SUFFIX}\"" >> ${START}
-echo "export PCS_BINGMAP_KEY=\"${PCS_BINGMAP_KEY}\""                                                     >> ${START}
-echo "export PCS_APPLICATION_SECRET=\"${PCS_APPLICATION_SECRET}\""                                       >> ${START}
-echo                                                                  >> ${START}
-echo "cd ${DEST}"                                                     >> ${START}
-echo                                                                  >> ${START}
-echo 'list=$(docker ps -aq)'                                          >> ${START}
-echo 'if [ -n "$list" ]; then'                                        >> ${START}
-echo '    docker rm -f $list'                                         >> ${START}
-echo 'fi'                                                             >> ${START}
-echo 'rm -f nohup.out'                                                >> ${START}
-echo                                                                  >> ${START}
-echo 'nohup docker-compose up &'                                      >> ${START}
-echo                                                                  >> ${START}
-echo 'ISUP=$(curl -ks https://localhost/ | grep -i "html" | wc -l)'   >> ${START}
-echo 'while [[ "$ISUP" == "0" ]]; do'                                 >> ${START}
-echo '  echo "Waiting for web site to start..."'                      >> ${START}
-echo '  sleep 3'                                                      >> ${START}
-echo '  ISUP=$(curl -ks https://localhost/ | grep -i "html" | wc -l)' >> ${START}
-echo 'done'                                                           >> ${START}
+# Download scripts
+wget $SCRIPTS_REPO/logs.sh     -O /app/logs.sh     && chmod 750 /app/logs.sh
+wget $SCRIPTS_REPO/simulate.sh -O /app/simulate.sh && chmod 750 /app/simulate.sh
+wget $SCRIPTS_REPO/start.sh    -O /app/start.sh    && chmod 750 /app/start.sh
+wget $SCRIPTS_REPO/stats.sh    -O /app/stats.sh    && chmod 750 /app/stats.sh
+wget $SCRIPTS_REPO/status.sh   -O /app/status.sh   && chmod 750 /app/status.sh
+wget $SCRIPTS_REPO/stop.sh     -O /app/stop.sh     && chmod 750 /app/stop.sh
+wget $SCRIPTS_REPO/update.sh   -O /app/update.sh   && chmod 750 /app/update.sh
 
 # ========================================================================
 
-echo '#!/bin/bash'                                                                                                                       >> ${SIMULATE}
-echo "set -e"                                                                                                                            >> ${SIMULATE}
-echo 'cd /app'                                                                                                                           >> ${SIMULATE}
-echo                                                                                                                                     >> ${SIMULATE}
-echo 'echo "Starting simulation..."'                                                                                                     >> ${SIMULATE}
-echo 'ISUP=$(curl -sk https://localhost/devicesimulation/v1/status | grep "Alive" | wc -l)'                                              >> ${SIMULATE}
-echo 'while [[ "$ISUP" == "0" ]]; do'                                                                                                    >> ${SIMULATE}
-echo '  echo "Waiting for simulation service to be available..."'                                                                        >> ${SIMULATE}
-echo '  sleep 4'                                                                                                                         >> ${SIMULATE}
-echo '  ISUP=$(curl -sk https://localhost/devicesimulation/v1/status | grep "Alive" | wc -l)'                                            >> ${SIMULATE}
-echo 'done'                                                                                                                              >> ${SIMULATE}
-echo 'curl -sk -X POST "https://localhost/devicesimulation/v1/simulations?template=default" -H "content-type: application/json" -d "{}"' >> ${SIMULATE}
-echo 'echo'
-
-# ========================================================================
-
-echo '#!/bin/bash'             >> ${STOP}
-echo 'list=$(docker ps -aq)'   >> ${STOP}
-echo 'if [ -n "$list" ]; then' >> ${STOP}
-echo '    docker rm -f $list'  >> ${STOP}
-echo 'fi'                      >> ${STOP}
-
-# ========================================================================
-
-echo '#!/bin/bash'                                                >> ${UPDATE}
-echo "set -e"                                                     >> ${UPDATE}
-echo                                                              >> ${UPDATE}
-echo "cd ${DEST}"                                                 >> ${UPDATE}
-echo                                                              >> ${UPDATE}
-echo './stop.sh'                                                  >> ${UPDATE}
-echo                                                              >> ${UPDATE}
-echo 'docker pull azureiotpcs/remote-monitoring-nginx:latest'     >> ${UPDATE}
-echo 'docker pull azureiotpcs/pcs-remote-monitoring-webui:latest' >> ${UPDATE}
-echo 'docker pull azureiotpcs/pcs-auth-dotnet:latest'             >> ${UPDATE}
-echo 'docker pull azureiotpcs/device-simulation-dotnet:latest'    >> ${UPDATE}
-echo 'docker pull azureiotpcs/pcs-storage-adapter-dotnet:latest'  >> ${UPDATE}
-echo 'docker pull azureiotpcs/pcs-storage-adapter-java:latest'    >> ${UPDATE}
-echo 'docker pull azureiotpcs/pcs-config-dotnet:latest'           >> ${UPDATE}
-echo 'docker pull azureiotpcs/pcs-config-java:latest'             >> ${UPDATE}
-echo 'docker pull azureiotpcs/iothub-manager-dotnet:latest'       >> ${UPDATE}
-echo 'docker pull azureiotpcs/iothub-manager-java:latest'         >> ${UPDATE}
-echo 'docker pull azureiotpcs/telemetry-java:latest'              >> ${UPDATE}
-echo 'docker pull azureiotpcs/telemetry-dotnet:latest'            >> ${UPDATE}
-echo 'docker pull azureiotpcs/telemetry-agent-java:latest'        >> ${UPDATE}
-echo 'docker pull azureiotpcs/telemetry-agent-dotnet:latest'      >> ${UPDATE}
-echo                                                              >> ${UPDATE}
-echo './start.sh'                                                 >> ${UPDATE}
-
-# ========================================================================
-
-echo '#!/bin/bash'         >> ${LOGS}
-echo "cd ${DEST}"          >> ${LOGS}
-echo 'docker-compose logs' >> ${LOGS}
-
-# ========================================================================
+# Web App configuration
+touch ${WEBUICONFIG} && chmod 440 ${WEBUICONFIG}
 
 echo "var DeploymentConfig = {"                     >> ${WEBUICONFIG}
 echo "  authEnabled: true,"                         >> ${WEBUICONFIG}
@@ -194,4 +100,42 @@ echo "}"                                            >> ${WEBUICONFIG}
 
 # ========================================================================
 
-nohup ${START} &
+# Environment variables
+touch ${ENVVARS} && chmod 440 ${ENVVARS}
+
+echo "export HOST_NAME=\"${HOST_NAME}\""                                                                 >> ${ENVVARS}
+echo "export APP_RUNTIME=\"${APP_RUNTIME}\""                                                             >> ${ENVVARS}
+echo "export PCS_AUTH_ISSUER=\"${PCS_AUTH_ISSUER}\""                                                     >> ${ENVVARS}
+echo "export PCS_AUTH_AUDIENCE=\"${PCS_AUTH_AUDIENCE}\""                                                 >> ${ENVVARS}
+echo "export PCS_AUTH_AAD_GLOBAL_TENANTID=\"${PCS_AUTH_AAD_GLOBAL_TENANTID}\""                           >> ${ENVVARS}
+echo "export PCS_AUTH_AAD_GLOBAL_CLIENTID=\"${PCS_AUTH_AAD_GLOBAL_CLIENTID}\""                           >> ${ENVVARS}
+echo "export PCS_AUTH_AAD_GLOBAL_LOGINURI=\"${PCS_AUTH_AAD_GLOBAL_LOGINURI}\""                           >> ${ENVVARS}
+echo "export PCS_IOTHUB_CONNSTRING=\"${PCS_IOTHUB_CONNSTRING}\""                                         >> ${ENVVARS}
+echo "export PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING=\"${PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING}\""   >> ${ENVVARS}
+echo "export PCS_TELEMETRY_DOCUMENTDB_CONNSTRING=\"${PCS_TELEMETRY_DOCUMENTDB_CONNSTRING}\""             >> ${ENVVARS}
+echo "export PCS_TELEMETRYAGENT_DOCUMENTDB_CONNSTRING=\"${PCS_TELEMETRYAGENT_DOCUMENTDB_CONNSTRING}\""   >> ${ENVVARS}
+echo "export PCS_IOTHUBREACT_ACCESS_CONNSTRING=\"${PCS_IOTHUBREACT_ACCESS_CONNSTRING}\""                 >> ${ENVVARS}
+echo "export PCS_IOTHUBREACT_HUB_NAME=\"${PCS_IOTHUBREACT_HUB_NAME}\""                                   >> ${ENVVARS}
+echo "export PCS_IOTHUBREACT_HUB_ENDPOINT=\"${PCS_IOTHUBREACT_HUB_ENDPOINT}\""                           >> ${ENVVARS}
+echo "export PCS_IOTHUBREACT_HUB_PARTITIONS=\"${PCS_IOTHUBREACT_HUB_PARTITIONS}\""                       >> ${ENVVARS}
+echo "export PCS_IOTHUBREACT_AZUREBLOB_ACCOUNT=\"${PCS_IOTHUBREACT_AZUREBLOB_ACCOUNT}\""                 >> ${ENVVARS}
+echo "export PCS_IOTHUBREACT_AZUREBLOB_KEY=\"${PCS_IOTHUBREACT_AZUREBLOB_KEY}\""                         >> ${ENVVARS}
+echo "export PCS_IOTHUBREACT_AZUREBLOB_ENDPOINT_SUFFIX=\"${PCS_IOTHUBREACT_AZUREBLOB_ENDPOINT_SUFFIX}\"" >> ${ENVVARS}
+echo "export PCS_BINGMAP_KEY=\"${PCS_BINGMAP_KEY}\""                                                     >> ${ENVVARS}
+echo "export PCS_APPLICATION_SECRET=\"${PCS_APPLICATION_SECRET}\""                                       >> ${ENVVARS}
+echo ""                                                                                                  >> ${ENVVARS}
+echo "##########################################################################################"        >> ${ENVVARS}
+echo "# Development settings, don't change these in Production"                                          >> ${ENVVARS}
+echo "# You can run 'start.sh --unsafe' to temporarily disable Auth and Cross-Origin protections"        >> ${ENVVARS}
+echo ""                                                                                                  >> ${ENVVARS}
+echo "# Format: true | false"                                                                            >> ${ENVVARS}
+echo "# empty => Auth required"                                                                          >> ${ENVVARS}
+echo "export PCS_AUTH_REQUIRED=\"\""                                                                     >> ${ENVVARS}
+echo ""                                                                                                  >> ${ENVVARS}
+echo "# Format: { 'origins': ['*'], 'methods': ['*'], 'headers': ['*'] }"                                >> ${ENVVARS}
+echo "# empty => CORS support disabled"                                                                  >> ${ENVVARS}
+echo "export PCS_CORS_WHITELIST=\"\""                                                                    >> ${ENVVARS}
+
+# ========================================================================
+
+nohup /app/start.sh &
