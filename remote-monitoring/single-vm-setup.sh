@@ -2,6 +2,8 @@
 
 APP_PATH="/app"
 WEBUICONFIG="${APP_PATH}/webui-config.js"
+WEBUICONFIG_SAFE="${APP_PATH}/webui-config.js.safe"
+WEBUICONFIG_UNSAFE="${APP_PATH}/webui-config.js.unsafe"
 ENVVARS="${APP_PATH}/env-vars"
 DOCKERCOMPOSE="${APP_PATH}/docker-compose.yml"
 CERTS="${APP_PATH}/certs"
@@ -88,15 +90,28 @@ wget $SCRIPTS_REPO/update.sh   -O /app/update.sh   && chmod 750 /app/update.sh
 
 # Web App configuration
 touch ${WEBUICONFIG} && chmod 440 ${WEBUICONFIG}
+touch ${WEBUICONFIG_SAFE} && chmod 440 ${WEBUICONFIG_SAFE}
+touch ${WEBUICONFIG_UNSAFE} && chmod 440 ${WEBUICONFIG_UNSAFE}
 
-echo "var DeploymentConfig = {"                     >> ${WEBUICONFIG}
-echo "  authEnabled: true,"                         >> ${WEBUICONFIG}
-echo "  authType: '${PCS_WEBUI_AUTH_TYPE}',"        >> ${WEBUICONFIG}
-echo "  aad : {"                                    >> ${WEBUICONFIG}
-echo "    tenant: '${PCS_WEBUI_AUTH_AAD_TENANT}',"  >> ${WEBUICONFIG}
-echo "    appId: '${PCS_WEBUI_AUTH_AAD_APPID}'"     >> ${WEBUICONFIG}
-echo "  }"                                          >> ${WEBUICONFIG}
-echo "}"                                            >> ${WEBUICONFIG}
+echo "var DeploymentConfig = {"                     >> ${WEBUICONFIG_SAFE}
+echo "  authEnabled: true,"                         >> ${WEBUICONFIG_SAFE}
+echo "  authType: '${PCS_WEBUI_AUTH_TYPE}',"        >> ${WEBUICONFIG_SAFE}
+echo "  aad : {"                                    >> ${WEBUICONFIG_SAFE}
+echo "    tenant: '${PCS_WEBUI_AUTH_AAD_TENANT}',"  >> ${WEBUICONFIG_SAFE}
+echo "    appId: '${PCS_WEBUI_AUTH_AAD_APPID}'"     >> ${WEBUICONFIG_SAFE}
+echo "  }"                                          >> ${WEBUICONFIG_SAFE}
+echo "}"                                            >> ${WEBUICONFIG_SAFE}
+
+echo "var DeploymentConfig = {"                     >> ${WEBUICONFIG_UNSAFE}
+echo "  authEnabled: false,"                        >> ${WEBUICONFIG_UNSAFE}
+echo "  authType: '${PCS_WEBUI_AUTH_TYPE}',"        >> ${WEBUICONFIG_UNSAFE}
+echo "  aad : {"                                    >> ${WEBUICONFIG_UNSAFE}
+echo "    tenant: '${PCS_WEBUI_AUTH_AAD_TENANT}',"  >> ${WEBUICONFIG_UNSAFE}
+echo "    appId: '${PCS_WEBUI_AUTH_AAD_APPID}'"     >> ${WEBUICONFIG_UNSAFE}
+echo "  }"                                          >> ${WEBUICONFIG_UNSAFE}
+echo "}"                                            >> ${WEBUICONFIG_UNSAFE}
+
+cp -p ${WEBUICONFIG_SAFE} ${WEBUICONFIG}
 
 # ========================================================================
 
