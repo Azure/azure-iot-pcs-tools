@@ -89,9 +89,9 @@ wget $SCRIPTS_REPO/update.sh   -O /app/update.sh   && chmod 750 /app/update.sh
 # ========================================================================
 
 # Web App configuration
-touch ${WEBUICONFIG} && chmod 440 ${WEBUICONFIG}
-touch ${WEBUICONFIG_SAFE} && chmod 440 ${WEBUICONFIG_SAFE}
-touch ${WEBUICONFIG_UNSAFE} && chmod 440 ${WEBUICONFIG_UNSAFE}
+touch ${WEBUICONFIG} && chmod 444 ${WEBUICONFIG}
+touch ${WEBUICONFIG_SAFE} && chmod 444 ${WEBUICONFIG_SAFE}
+touch ${WEBUICONFIG_UNSAFE} && chmod 444 ${WEBUICONFIG_UNSAFE}
 
 echo "var DeploymentConfig = {"                     >> ${WEBUICONFIG_SAFE}
 echo "  authEnabled: true,"                         >> ${WEBUICONFIG_SAFE}
