@@ -2,7 +2,7 @@
 
 cd /app
 
-source "configuration"
+source "env-vars"
 
 list=$(docker ps -aq)
 if [ -n "$list" ]; then
