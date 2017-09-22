@@ -74,16 +74,18 @@ touch ${PKEY} && chmod 550 ${PKEY}
 # ========================================================================
 
 # Always have quotes around the certificate and key value to preserve the formatting
-echo "${PCS_CERTIFICATE}"                                                                                  >> ${CERT}
-echo "${PCS_CERTIFICATE_KEY}"                                                                              >> ${PKEY}
+echo "${PCS_CERTIFICATE}"                                                                                >> ${CERT}
+echo "${PCS_CERTIFICATE_KEY}"                                                                            >> ${PKEY}
 
 # ========================================================================
 
 echo "#!/bin/bash"                                                                                       >> ${START}
+echo "set -e"                                                                                            >> ${START}
 echo ""                                                                                                  >> ${START}
-echo "# Development settings, you shouldn't need to change this in Production"                           >> ${START}
+echo "# Format: true | false  -- (empty = true)"                                                         >> ${START}
 echo "export PCS_AUTH_REQUIRED=\"\""                                                                     >> ${START}
-echo "export CORS_WHITELIST=\"\""                                                                        >> ${START}
+echo "# Format: \{ 'origins': ['*'], 'methods': ['*'], 'headers': ['*'] \}"                              >> ${START}
+echo "export PCS_CORS_WHITELIST=\"\""                                                                    >> ${START}
 echo ""                                                                                                  >> ${START}
 echo "export HOST_NAME=\"${HOST_NAME}\""                                                                 >> ${START}
 echo "export APP_RUNTIME=\"${APP_RUNTIME}\""                                                             >> ${START}
@@ -126,6 +128,7 @@ echo 'done'                                                           >> ${START
 # ========================================================================
 
 echo '#!/bin/bash'                                                                                                                       >> ${SIMULATE}
+echo "set -e"                                                                                                                            >> ${SIMULATE}
 echo 'cd /app'                                                                                                                           >> ${SIMULATE}
 echo                                                                                                                                     >> ${SIMULATE}
 echo 'echo "Starting simulation..."'                                                                                                     >> ${SIMULATE}
@@ -149,6 +152,8 @@ echo 'fi'                      >> ${STOP}
 # ========================================================================
 
 echo '#!/bin/bash'                                                >> ${UPDATE}
+echo "set -e"                                                     >> ${UPDATE}
+echo                                                              >> ${UPDATE}
 echo "cd ${DEST}"                                                 >> ${UPDATE}
 echo                                                              >> ${UPDATE}
 echo './stop.sh'                                                  >> ${UPDATE}

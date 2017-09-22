@@ -33,6 +33,7 @@ services:
       - PCS_AUTH_ISSUER
       - PCS_AUTH_AUDIENCE
       - PCS_AUTH_REQUIRED
+      - PCS_CORS_WHITELIST
       - PCS_APPLICATION_SECRET
 
   iothubmanager:
@@ -44,6 +45,7 @@ services:
       - PCS_AUTH_ISSUER
       - PCS_AUTH_AUDIENCE
       - PCS_AUTH_REQUIRED
+      - PCS_CORS_WHITELIST
       - PCS_APPLICATION_SECRET
 
   devicesimulation:
@@ -56,6 +58,7 @@ services:
       - PCS_AUTH_ISSUER
       - PCS_AUTH_AUDIENCE
       - PCS_AUTH_REQUIRED
+      - PCS_CORS_WHITELIST
       - PCS_APPLICATION_SECRET
     #volumes:
     #  - ./sample-volume:/app/data:ro
@@ -70,6 +73,7 @@ services:
       - PCS_AUTH_ISSUER
       - PCS_AUTH_AUDIENCE
       - PCS_AUTH_REQUIRED
+      - PCS_CORS_WHITELIST
       - PCS_APPLICATION_SECRET
 
   config:
@@ -88,6 +92,7 @@ services:
       - PCS_AUTH_ISSUER
       - PCS_AUTH_AUDIENCE
       - PCS_AUTH_REQUIRED
+      - PCS_CORS_WHITELIST
       - PCS_APPLICATION_SECRET
 
   storageadapter:
@@ -97,6 +102,7 @@ services:
       - PCS_AUTH_ISSUER
       - PCS_AUTH_AUDIENCE
       - PCS_AUTH_REQUIRED
+      - PCS_CORS_WHITELIST
       - PCS_APPLICATION_SECRET
 
   telemetryagent:
@@ -121,4 +127,5 @@ services:
       - PCS_AUTH_ISSUER
       - PCS_AUTH_AUDIENCE
       - PCS_AUTH_REQUIRED
+      - PCS_CORS_WHITELIST
       - PCS_APPLICATION_SECRET
