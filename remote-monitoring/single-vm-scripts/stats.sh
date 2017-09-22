@@ -2,4 +2,4 @@
 
 cd /app
 
-docker stats
+docker stats -a

@@ -18,7 +18,7 @@ wget $SCRIPTS_REPO/update.sh   -O /app/update.sh   && chmod 750 /app/update.sh
 ./stop.sh
 
 # Update Docker images
-docker-compose pull
+docker-compose pull --ignore-pull-failure
 
 # Start the services
 ./start.sh
