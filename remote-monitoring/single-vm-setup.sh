@@ -35,6 +35,7 @@ export PCS_AUTH_AUDIENCE="$6"
 export PCS_WEBUI_AUTH_TYPE="aad"
 export PCS_WEBUI_AUTH_AAD_TENANT="$5"
 export PCS_WEBUI_AUTH_AAD_APPID="$6"
+export PCS_WEBUI_AUTH_AAD_INSTANCE="$7"
 export PCS_APPLICATION_SECRET=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-zA-Z0-9-,./;:[]\(\)_=^!~' | fold -w 64 | head -n 1)
 
 # ========================================================================
@@ -93,23 +94,25 @@ touch ${WEBUICONFIG} && chmod 444 ${WEBUICONFIG}
 touch ${WEBUICONFIG_SAFE} && chmod 444 ${WEBUICONFIG_SAFE}
 touch ${WEBUICONFIG_UNSAFE} && chmod 444 ${WEBUICONFIG_UNSAFE}
 
-echo "var DeploymentConfig = {"                     >> ${WEBUICONFIG_SAFE}
-echo "  authEnabled: true,"                         >> ${WEBUICONFIG_SAFE}
-echo "  authType: '${PCS_WEBUI_AUTH_TYPE}',"        >> ${WEBUICONFIG_SAFE}
-echo "  aad : {"                                    >> ${WEBUICONFIG_SAFE}
-echo "    tenant: '${PCS_WEBUI_AUTH_AAD_TENANT}',"  >> ${WEBUICONFIG_SAFE}
-echo "    appId: '${PCS_WEBUI_AUTH_AAD_APPID}'"     >> ${WEBUICONFIG_SAFE}
-echo "  }"                                          >> ${WEBUICONFIG_SAFE}
-echo "}"                                            >> ${WEBUICONFIG_SAFE}
+echo "var DeploymentConfig = {"                       >> ${WEBUICONFIG_SAFE}
+echo "  authEnabled: true,"                           >> ${WEBUICONFIG_SAFE}
+echo "  authType: '${PCS_WEBUI_AUTH_TYPE}',"          >> ${WEBUICONFIG_SAFE}
+echo "  aad : {"                                      >> ${WEBUICONFIG_SAFE}
+echo "    tenant: '${PCS_WEBUI_AUTH_AAD_TENANT}',"    >> ${WEBUICONFIG_SAFE}
+echo "    appId: '${PCS_WEBUI_AUTH_AAD_APPID}',"      >> ${WEBUICONFIG_SAFE}
+echo "    instance: '${PCS_WEBUI_AUTH_AAD_INSTANCE}'" >> ${WEBUICONFIG_SAFE}
+echo "  }"                                            >> ${WEBUICONFIG_SAFE}
+echo "}"                                              >> ${WEBUICONFIG_SAFE}
 
-echo "var DeploymentConfig = {"                     >> ${WEBUICONFIG_UNSAFE}
-echo "  authEnabled: false,"                        >> ${WEBUICONFIG_UNSAFE}
-echo "  authType: '${PCS_WEBUI_AUTH_TYPE}',"        >> ${WEBUICONFIG_UNSAFE}
-echo "  aad : {"                                    >> ${WEBUICONFIG_UNSAFE}
-echo "    tenant: '${PCS_WEBUI_AUTH_AAD_TENANT}',"  >> ${WEBUICONFIG_UNSAFE}
-echo "    appId: '${PCS_WEBUI_AUTH_AAD_APPID}'"     >> ${WEBUICONFIG_UNSAFE}
-echo "  }"                                          >> ${WEBUICONFIG_UNSAFE}
-echo "}"                                            >> ${WEBUICONFIG_UNSAFE}
+echo "var DeploymentConfig = {"                       >> ${WEBUICONFIG_UNSAFE}
+echo "  authEnabled: false,"                          >> ${WEBUICONFIG_UNSAFE}
+echo "  authType: '${PCS_WEBUI_AUTH_TYPE}',"          >> ${WEBUICONFIG_UNSAFE}
+echo "  aad : {"                                      >> ${WEBUICONFIG_UNSAFE}
+echo "    tenant: '${PCS_WEBUI_AUTH_AAD_TENANT}',"    >> ${WEBUICONFIG_UNSAFE}
+echo "    appId: '${PCS_WEBUI_AUTH_AAD_APPID}',"      >> ${WEBUICONFIG_UNSAFE}
+echo "    instance: '${PCS_WEBUI_AUTH_AAD_INSTANCE}'" >> ${WEBUICONFIG_UNSAFE}
+echo "  }"                                            >> ${WEBUICONFIG_UNSAFE}
+echo "}"                                              >> ${WEBUICONFIG_UNSAFE}
 
 cp -p ${WEBUICONFIG_SAFE} ${WEBUICONFIG}
 
