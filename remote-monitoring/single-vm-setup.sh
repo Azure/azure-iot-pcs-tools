@@ -37,6 +37,9 @@ export PCS_WEBUI_AUTH_AAD_TENANT="$5"
 export PCS_WEBUI_AUTH_AAD_APPID="$6"
 export PCS_APPLICATION_SECRET=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-zA-Z0-9-,./;:[]\(\)_=^!~' | fold -w 64 | head -n 1)
 
+# TODO: remove temporary fix when projects have moved to use PCS_APPLICATION_SECRET
+export APPLICATION_SECRET=$PCS_APPLICATION_SECRET
+
 # ========================================================================
 
 # Configure Docker registry based on host name
