@@ -41,6 +41,7 @@ export PCS_APPLICATION_SECRET=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-zA-Z0-9-
 # ========================================================================
 
 # Configure Docker registry based on host name
+# ToDo: we may need to add similar parameter to AzureGermanCloud and AzureUSGovernment
 config_for_azure_china() {
     set +e
     local host_name=$1
