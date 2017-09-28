@@ -1,5 +1,6 @@
 version: '2'
 
+# TODO: remove APPLICATION_SECRET
 services:
   reverseproxy:
     image: azureiotpcs/remote-monitoring-nginx:latest
@@ -28,7 +29,6 @@ services:
       - /app/webui-config.js:/app/build/webui-config.js:ro
 
   auth:
-    # TODO Use Java container
     image: azureiotpcs/pcs-auth-dotnet
     environment:
       - PCS_AUTH_ISSUER
@@ -36,6 +36,7 @@ services:
       - PCS_AUTH_REQUIRED
       - PCS_CORS_WHITELIST
       - PCS_APPLICATION_SECRET
+      - APPLICATION_SECRET
 
   iothubmanager:
     image: azureiotpcs/iothub-manager-java
@@ -48,6 +49,7 @@ services:
       - PCS_AUTH_REQUIRED
       - PCS_CORS_WHITELIST
       - PCS_APPLICATION_SECRET
+      - APPLICATION_SECRET
 
   devicesimulation:
     image: azureiotpcs/device-simulation-dotnet:latest
@@ -61,6 +63,7 @@ services:
       - PCS_AUTH_REQUIRED
       - PCS_CORS_WHITELIST
       - PCS_APPLICATION_SECRET
+      - APPLICATION_SECRET
     #volumes:
     #  - ./sample-volume:/app/data:ro
 
@@ -76,6 +79,7 @@ services:
       - PCS_AUTH_REQUIRED
       - PCS_CORS_WHITELIST
       - PCS_APPLICATION_SECRET
+      - APPLICATION_SECRET
 
   config:
     image: azureiotpcs/pcs-config-java:latest
@@ -95,6 +99,7 @@ services:
       - PCS_AUTH_REQUIRED
       - PCS_CORS_WHITELIST
       - PCS_APPLICATION_SECRET
+      - APPLICATION_SECRET
 
   storageadapter:
     image: azureiotpcs/pcs-storage-adapter-java:latest
@@ -105,9 +110,9 @@ services:
       - PCS_AUTH_REQUIRED
       - PCS_CORS_WHITELIST
       - PCS_APPLICATION_SECRET
+      - APPLICATION_SECRET
 
   telemetryagent:
-    # TODO: rename image to telemetry-agent-java
     image: azureiotpcs/telemetry-agent-java:latest
     depends_on:
       - telemetry
@@ -129,3 +134,4 @@ services:
       - PCS_AUTH_REQUIRED
       - PCS_CORS_WHITELIST
       - PCS_APPLICATION_SECRET
+      - APPLICATION_SECRET
