@@ -51,12 +51,12 @@ config_for_azure_china() {
         service docker restart
         
         # Rewrite the AAD issuer in Azure China environment
-        export PCS_AUTH_ISSUER="https://sts.chinacloudapi.cn/${5}/"
+        export PCS_AUTH_ISSUER="https://sts.chinacloudapi.cn/$2/"
     fi
     set -e
 }
 
-config_for_azure_china $HOST_NAME
+config_for_azure_china $HOST_NAME $5
 
 # ========================================================================
 
