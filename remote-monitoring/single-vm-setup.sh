@@ -41,7 +41,7 @@ export PCS_APPLICATION_SECRET=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-zA-Z0-9-
 # ========================================================================
 
 # Configure Docker registry based on host name
-config_docker() {
+config_for_azure_china() {
     set +e
     local host_name=$1
     if (echo $host_name | grep -c  "\.cn$") ; then
@@ -49,11 +49,14 @@ config_docker() {
         local config_file='/etc/docker/daemon.json'
         echo "{\"registry-mirrors\": [\"https://registry.docker-cn.com\"]}" > ${config_file}
         service docker restart
+        
+        # Rewrite the AAD issuer in Azure China environment
+        export PCS_AUTH_ISSUER="https://sts.chinacloudapi.cn/${5}/"
     fi
     set -e
 }
 
-config_docker $HOST_NAME
+config_for_azure_china $HOST_NAME
 
 # ========================================================================
 
