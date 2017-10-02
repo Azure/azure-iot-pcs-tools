@@ -10,7 +10,7 @@ CERTS="${APP_PATH}/certs"
 CERT="${CERTS}/tls.crt"
 PKEY="${CERTS}/tls.key"
 
-SCRIPTS_REPO="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/master/remote-monitoring/single-vm-scripts/"
+SCRIPTS_REPO="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/1.0.0-preview/remote-monitoring/single-vm-scripts/"
 
 # ========================================================================
 
