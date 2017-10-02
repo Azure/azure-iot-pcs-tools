@@ -70,7 +70,7 @@ cd ${APP_PATH}
 # ========================================================================
 
 # Docker compose file
-DC_SOURCE="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/master/remote-monitoring/docker-compose.${APP_RUNTIME}.yml"
+DC_SOURCE="https://raw.githubusercontent.com/Azure/azure-iot-pcs-tools/1.0.0-preview/remote-monitoring/docker-compose.${APP_RUNTIME}.yml"
 wget $DC_SOURCE -O ${DOCKERCOMPOSE}
 
 # ========================================================================
