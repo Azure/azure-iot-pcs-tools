@@ -28,7 +28,7 @@ services:
       - /app/webui-config.js:/app/build/webui-config.js:ro
 
   auth:
-    image: azureiotpcs/pcs-auth-dotnet
+    image: azureiotpcs/pcs-auth-dotnet:1.0.0-preview
     environment:
       - PCS_AUTH_ISSUER
       - PCS_AUTH_AUDIENCE
@@ -37,7 +37,7 @@ services:
       - PCS_APPLICATION_SECRET
 
   iothubmanager:
-    image: azureiotpcs/iothub-manager-dotnet
+    image: azureiotpcs/iothub-manager-dotnet:1.0.0-preview
     environment:
       - PCS_IOTHUB_CONNSTRING
       # TODO: the dependency on config is temporary
