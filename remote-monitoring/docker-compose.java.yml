@@ -3,7 +3,7 @@ version: '2'
 # TODO: remove APPLICATION_SECRET
 services:
   reverseproxy:
-    image: azureiotpcs/remote-monitoring-nginx:latest
+    image: azureiotpcs/remote-monitoring-nginx:1.0.0-preview
     ports:
       - "80:80"
       - "443:443"
@@ -18,7 +18,7 @@ services:
       - /app/certs:/app/certs:ro
 
   webui:
-    image: azureiotpcs/pcs-remote-monitoring-webui:latest
+    image: azureiotpcs/pcs-remote-monitoring-webui:1.0.0-preview
     depends_on:
       - auth
       - iothubmanager
@@ -52,7 +52,7 @@ services:
       - APPLICATION_SECRET
 
   devicesimulation:
-    image: azureiotpcs/device-simulation-dotnet:latest
+    image: azureiotpcs/device-simulation-dotnet:1.0.0-preview
     depends_on:
       - storageadapter
     environment:
@@ -68,7 +68,7 @@ services:
     #  - ./sample-volume:/app/data:ro
 
   telemetry:
-    image: azureiotpcs/telemetry-java:latest
+    image: azureiotpcs/telemetry-java:1.0.0-preview
     depends_on:
       - storageadapter
     environment:
@@ -82,7 +82,7 @@ services:
       - APPLICATION_SECRET
 
   config:
-    image: azureiotpcs/pcs-config-java:latest
+    image: azureiotpcs/pcs-config-java:1.0.0-preview
     depends_on:
       - storageadapter
       - devicesimulation
@@ -102,7 +102,7 @@ services:
       - APPLICATION_SECRET
 
   storageadapter:
-    image: azureiotpcs/pcs-storage-adapter-java:latest
+    image: azureiotpcs/pcs-storage-adapter-java:1.0.0-preview
     environment:
       - PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING
       - PCS_AUTH_ISSUER
@@ -113,7 +113,7 @@ services:
       - APPLICATION_SECRET
 
   telemetryagent:
-    image: azureiotpcs/telemetry-agent-java:latest
+    image: azureiotpcs/telemetry-agent-java:1.0.0-preview
     depends_on:
       - telemetry
       - iothubmanager
